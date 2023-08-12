@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle RH</title>
+    <link rel="stylesheet" href="/src/assets/style.css">
+    <script src="../assets/index.js" defer></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="./register.html" class="btn">Cadastrar funcionário</a></li>
+                <li><a onclick="ConfirmEmptyFaltas()" class="btn">Zerar controle</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div id="table">
+            <table>
+                <caption>Funcionários</caption>
+                <thead>
+                    <tr>
+                        <td>Nome</td>
+                        <td>Função</td>
+                        <td colspan="2">Faltas</td>
+                        <td>horas extras</td>
+                        <td>Descontos*</td>
+                    </tr>
+                </thead>
+            </table>
+            <p>* Os descontos não representam as faltas.</p>
+        </div>
+
+        <div class="modal none">
+            <span class="exit" onclick="controlModal()">X</span>
+            <div id="modal-content"></div>
+            <button class="btn" onclick="controlModal()">Fechar</button>
+        </div>
+        <button onclick="renderFaltasOrHorasextras(0,'horas_extras')">add</button>
+    </main>
+
+</body>
+</html>
