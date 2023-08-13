@@ -1,14 +1,24 @@
 const table = document.querySelector('table')
-const modal = document.querySelector('.modal')
+
 const modalContent = document.querySelector('#modal-content')
+const modalInfo = document.querySelector('#info')
+const getLocalStorage = localStorage.getItem('funcionario')
+const getFuncionarios = JSON.parse(getLocalStorage) || undefined
 
-const getFuncionarios = JSON.parse(localStorage.getItem('funcionario')) || undefined
-
-const controlModal = () => {
-    modal.classList.toggle('none')
+const controlModal = (param) => {
     const node = document.querySelector('#modal-content div')
-    if (node) {
-        modalContent.removeChild(node)
+    if (node) { modalContent.removeChild(node) }
+    const nodeInfo = document.querySelector('#info > div')
+    if (nodeInfo) { modalInfo.removeChild(nodeInfo) }
+    const modal = document.querySelector('.modal')
+    const background = document.querySelector('#background')
+    // controle se nescessário renderizar novamente
+    if (param) {
+        modal.classList.remove('none')
+        background.classList.remove('none')
+    } else {
+        modal.classList.toggle('none')
+        background.classList.toggle('none')
     }
 }
 
@@ -16,22 +26,22 @@ const setNameFunc = (param) => {
     const div = document.createElement('div')
     div.classList.add('info')
     const name = document.createElement('p')
-    name.innerHTML = '<span class="bold">Nome: <span style="color: #40409f" >' + param.name + "</span></span>"
+    name.innerHTML = '<span class="bold">Nome: <span>' + param.name + "</span></span>"
     const funcao = document.createElement('p')
-    funcao.innerHTML = '<span class="bold">Função: <span style="color: #40409f">' + param.funcao + "</span></span>"
+    funcao.innerHTML = '<span class="bold">Função: <span>' + param.funcao + "</span></span>"
     div.append(name)
     div.append(funcao)
-
     return div
 }
 
-const setInfoFuncionario = () => {
+const setInfoFuncionario = async (param) => {
+    const data = await getFuncionarios
     const div = document.createElement('div')
-    const name = getFuncionarios[0].name
-    const funcao = getFuncionarios[0].funcao
+    const name = data[param].name
+    const funcao = data[param].func
     const infoFuncionario = setNameFunc({ name, funcao })
     div.append(infoFuncionario)
-    return div
+    modalInfo.append(div)
 }
 
 const input = (param) => {
@@ -89,63 +99,68 @@ const form = (param) => {
     form.append(input(funcao))
     form.append(submit(param?.submit))
     div.append(form)
-    console.log(div)
     return div
 }
 
-const renderEditFuncionario = (param) => {
+const renderEditFuncionario =async (paramUser) => {
     const func = {
-        title: 'Editar funcionário',
+        title: 'Editar Funcionário',
         name: {
             name: 'name',
             text: 'Nome',
-            value: getFuncionarios[param].name
+            value: getFuncionarios[paramUser].name
         }, funcao: {
             name: 'funcao',
             text: 'Função',
-            value: getFuncionarios[param].func
+            value: getFuncionarios[paramUser].func
         },
-        hidden: param,
+        hidden: paramUser,
         submit: 'Editar'
     }
+   
     const formEdit = form(func, "editar")
     formEdit.addEventListener('submit', editFuncionario)
     controlModal()
+    await setInfoFuncionario(paramUser)
     modalContent.append(formEdit)
 }
 
 const editFuncionario = (e) => {
     e.preventDefault()
-    const id = e.target.id.value
-    const name = e.target.name.value
-    const funcao = e.target.funcao.value
-    getFuncionarios[id].name = name
-    getFuncionarios[id].func = funcao
-    localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
-
-    setTimeout(() => location.reload(), 500)
+    const res = confirm('Tem certeza que deseja fazer esta ação')
+    if (res === true) {
+        const index = e.target.id.value
+        const name = e.target.name.value
+        const funcao = e.target.funcao.value
+        getFuncionarios[index].name = name
+        getFuncionarios[index].func = funcao
+        localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
+        setTimeout(() => location.reload(), 500)
+    }
 }
-const inputDate = {
-    date: {
-        class: 'container-date',
-        type: 'date',
-        text: 'Data',
-        name: 'date'
-    }, init: {
-        class: 'container-time',
-        type: 'time',
-        text: 'De',
-        value: '07:00',
-        name: 'init'
-    }, end: {
-        class: 'container-time',
-        type: 'time',
-        text: 'à',
-        value: '11:30',
-        name: 'end'
-    }, motivo: {
-        text: 'Motivo',
-        name: 'motivo'
+const inputSetDate = () => {
+    return {
+        date: {
+            class: 'container-date',
+            type: 'date',
+            text: 'Data',
+            name: 'date'
+        }, init: {
+            class: 'container-time',
+            type: 'time',
+            text: 'De',
+            value: '07:00',
+            name: 'init'
+        }, end: {
+            class: 'container-time',
+            type: 'time',
+            text: 'à',
+            value: '11:30',
+            name: 'end'
+        }, motivo: {
+            text: 'Motivo',
+            name: 'motivo'
+        }
     }
 }
 
@@ -164,37 +179,86 @@ const valuesInputDate = (e) => {
     return description
 }
 
-const renderFaltasOrHorasextras = (param, param2) => {
-    const getFuncionarios = localStorage.getItem('funcionario')
-    const data = JSON.parse(getFuncionarios)
+const renderFaltasOrHorasextras = async (paramUser, paramObj) => {
     controlModal()
-    const div =document.createElement('div')
-    const date = data[param][param2].forEach(el => {
-        const p = document.createElement('p')
-        const content = `${el.date} de ${el.init} à ${el.end}, motivo: ${el.motivo}`
-        p.append(content)
-        div.append(p)
-        return p
-    })
+    const data = await getFuncionarios[paramUser][paramObj]
+    await setInfoFuncionario(paramUser)
+    const div = document.createElement('div')
+    div.classList.add('loop_info')
+    const h3 = document.createElement('h3')
+    if (paramObj === 'faltas') {
+        h3.innerHTML = paramObj
+        data.forEach((el, i) => {
+            const p = document.createElement('p')
+            const content = `${el.date} de ${el.init} à ${el.end}, motivo: ${el.motivo}`
+            p.append(content)
+            const divContext = document.createElement('div')
+            divContext.append(p)
+            const buttonEdit = document.createElement('button')
+            buttonEdit.innerHTML = 'Editar'
+            buttonEdit.classList.add('btn')
+            buttonEdit.onclick = () => renderEditFaltas(paramUser, i)
+            divContext.appendChild(buttonEdit)
+            const buttonDel = document.createElement('button')
+            buttonDel.classList.add('btn')
+            buttonDel.innerHTML = 'Delete'
+            buttonDel.onclick = () => deleteUnique(paramUser, i, paramObj)
+            divContext.append(buttonDel)
+            div.append(divContext)
+            return
+        })
+    } else if (paramObj === 'horas_extras') {
+        h3.innerHTML = paramObj
+        data.forEach((el, i) => {
+            const p = document.createElement('p')
+            const content = `${el.date} de ${el.init} à ${el.end}`
+            p.append(content)
+            const divContext = document.createElement('div')
+            divContext.append(p)
+            const buttonEdit = document.createElement('button')
+            buttonEdit.innerHTML = 'Editar'
+            buttonEdit.classList.add('btn')
+            divContext.appendChild(buttonEdit)
+            buttonEdit.onclick = () => renderEditHorasExtras(paramUser, i)
+            const buttonDel = document.createElement('button')
+            buttonDel.classList.add('btn')
+            buttonDel.innerHTML = 'Delete'
+            buttonDel.onclick = () => deleteUnique(paramUser, i, paramObj)
+            divContext.append(buttonDel)
+            div.append(divContext)
+            return
+        })
+    }
+    div.prepend(h3)
     modalContent.append(div)
 }
 
 // horas extras
-const formHorasExtras = (param) => {
+const formHorasExtras = (paramUser, param) => {
     const form = document.createElement('form')
+    const inputHidden = document.createElement('input')
+    inputHidden.type = 'hidden'
+    inputHidden.name = 'id'
+    const inputDate = inputSetDate()
     const h3 = document.createElement('h3')
     h3.innerHTML = param?.title || 'Horas extras'
     const div = document.createElement('div')
     const date = inputDate.date
+    date.value = param?.date || ''
     const init = inputDate.init
+    init.value = param?.init || '05:30'
     const end = inputDate.end
-
-    if (param) {
-        date.value = param.date
-        init.value = param.init
-        end.value = param.end
+    end.value = param?.end || '09:00'
+    if(paramUser !== undefined) {
+        inputHidden.value = paramUser
     }
+    // if (param !== undefined) {
+    //     date.value = param.date
+    //     init.value = param.init
+    //     end.value = param.end
+    // }
     form.append(h3)
+    form.append(inputHidden)
     form.append(input(date))
     form.append(input(init))
     form.append(input(end))
@@ -204,9 +268,9 @@ const formHorasExtras = (param) => {
     return div
 }
 
-const setFaltasOrhorasextras = (e, obj) => {
+const setFaltasOrhorasextras = (e, obj, param) => {
     e.preventDefault()
-    const index = parseInt(e.target?.idFuncionario?.value) || 0
+    const index = param
     const description = valuesInputDate(e)
 
     if (e.target.hasOwnProperty('motivo')) {
@@ -219,63 +283,79 @@ const setFaltasOrhorasextras = (e, obj) => {
         getFuncionarios[index][obj] = [description]
     }
     localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
-}
-
-const editFaltasOrhorasextras = (e, obj) => {
-    e.preventDefault()
-    const edit = e.target?.edit || 0
-    const index = parseInt(e.target?.idFuncionario?.value) || 0
-    const description = valuesInputDate(e)
-
-    if (e.target.hasOwnProperty('motivo')) {
-        description.motivo = e.target.motivo.value
-    }
-    if (getFuncionarios[index].hasOwnProperty(obj)) {
-        const i = parseInt(edit)
-        getFuncionarios[index][obj][i] = description
-    }
-    localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
     setTimeout(() => location.reload(), 500)
 }
 
-const renderRegisterHorasExtras = () => {
-    const prepend = setInfoFuncionario()
-    modalContent.prepend(prepend)
-    const register = formHorasExtras()
-    register.addEventListener('submit', (e) => setFaltasOrhorasextras(e, 'horas_extras'))
+const editFaltasOrhorasExtras = (e, paramObj, paramIndex) => {
+    e.preventDefault()
+    const res = confirm('Tem certeza que desja fazer esta ação?')
+    if (res === true) {
+        const index = parseInt(e.target?.id?.value)
+        const description = valuesInputDate(e)
+        if (e.target.hasOwnProperty('motivo')) {
+            description.motivo = e.target.motivo.value
+        }
+        if (getFuncionarios[index].hasOwnProperty(paramObj)) {
+            getFuncionarios[index][paramObj][paramIndex] = description
+        }
+        localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
+        setTimeout(() => location.reload(), 500)
+    }
+}
+
+const renderRegisterHorasExtras = async (paramUser) => {
+    await setInfoFuncionario(paramUser)
+    controlModal()
+    await setInfoFuncionario(paramUser)
+    const register = formHorasExtras(paramUser)
+    register.addEventListener('submit', (e) =>
+        setFaltasOrhorasextras(e, 'horas_extras', paramUser))
+    modalContent.append(register)
     return register
 }
 
-const renderEditHorasExtras = () => {
-    const prepend = setInfoFuncionario()
-    modalContent.prepend(prepend)
-    const faltas = getFuncionarios[0].horas_extras[0]
+const renderEditHorasExtras = async (paramUser, paramIndex) => {
+    await setInfoFuncionario(paramUser)
+    const faltas = await getFuncionarios[paramUser].horas_extras[paramIndex]
     const data = {
+        id: paramUser,
+        title: 'Editar Hora-extra',
         date: faltas.inputDate,
         init: faltas.init,
         end: faltas.end,
         submit: 'Editar'
     }
-    const register = formHorasExtras(data)
-    register.addEventListener('submit', (e) => editFaltasOrhorasextras(e, 'horas_extras'))
+    controlModal(true)
+    const register = formHorasExtras(paramUser,data)
+    register.addEventListener('submit', (e) =>
+        editFaltasOrhorasExtras(e, 'horas_extras', paramIndex))
+    modalContent.append(register)
     return register
 }
-
 // faltas
 const formFaltas = (param) => {
     const form = document.createElement('form')
+    const h3 = document.createElement('h3')
+    h3.innerHTML = param?.title || 'Add Falta'
+    const inputHidden = document.createElement('input')
+    inputHidden.type = 'hidden'
+    inputHidden.name = 'id'
     const div = document.createElement('div')
+    const inputDate = inputSetDate()
     const date = inputDate.date
     const init = inputDate.init
     const end = inputDate.end
     const motivo = inputDate.motivo
 
     if (param) {
+        inputHidden.value = param.id
         date.value = param.date
         init.value = param.init
         end.value = param.end
         motivo.value = param.motivo
     }
+    form.append(h3)
+    form.append(inputHidden)
     form.append(input(date))
     form.append(input(init))
     form.append(input(end))
@@ -286,30 +366,34 @@ const formFaltas = (param) => {
     return div
 }
 
-const renderRegisterFaltas = () => {
-    const prepend = setInfoFuncionario()
-    modalContent.prepend(prepend)
+const renderRegisterFaltas = async (param) => {
+    controlModal()
+    await setInfoFuncionario(param)
     const register = formFaltas()
-    register.addEventListener('submit', (e) => setFaltasOrhorasextras(e, 'faltas'))
+    modalContent.append(register)
+    register.addEventListener('submit', (e) => setFaltasOrhorasextras(e, 'faltas', param))
     return register
 }
 
-const RenderEditFaltas = () => {
-    const prepend = setInfoFuncionario()
-    modalContent.prepend(prepend)
-    const faltas = getFuncionarios[0].faltas[0]
+const renderEditFaltas = async (paramUser, paramIndex) => {
+    await setInfoFuncionario(paramUser)
+    const faltas = getFuncionarios[paramUser].faltas[paramIndex]
     const data = {
+        id: paramUser,
+        title: "Editar Falta",
         date: faltas.inputDate,
         init: faltas.init,
         end: faltas.end,
         motivo: faltas.motivo,
         submit: 'Editar'
     }
+    controlModal(true)
     const register = formFaltas(data)
-    register.addEventListener('submit', (e) => editFaltasOrhorasextras(e, 'faltas'))
+    register.addEventListener('submit', (e) =>
+        editFaltasOrhorasExtras(e, 'faltas', paramIndex))
+    modalContent.append(register)
     return register
 }
-
 // descontos
 const formDescontos = (param) => {
     const div = document.createElement('div')
@@ -343,22 +427,23 @@ const formDescontos = (param) => {
     return div
 }
 
-const renderEditDescontos = (param) => {
-    const index = 0
+const renderEditDescontos = (paramUser, paramIndex) => {
     const data = {
         title: 'Edit Descontos',
         name: {
             name: 'description',
             text: 'Descição',
-            value: getFuncionarios[param].descontos[index].description
+            value: getFuncionarios[paramUser].descontos[paramIndex].description
         }, funcao: {
             name: 'value',
             text: 'Valor',
-            value: getFuncionarios[param].descontos[index].value
+            value: getFuncionarios[paramUser].descontos[paramIndex].value
         },
-        hidden: param,
+        hidden: paramUser,
+        submit: 'Editar'
     }
-    controlModal()
+    controlModal(true)
+    setInfoFuncionario(paramUser)
     const formEdit = form(data)
     formEdit.addEventListener('submit', editDescontos)
     modalContent.append(formEdit)
@@ -366,21 +451,24 @@ const renderEditDescontos = (param) => {
 
 const editDescontos = (e) => {
     e.preventDefault()
-    const index = e.target.id.value
-    const indexDescontos = 0
-    const description = e.target.description.value
-    const value = e.target.value.value
-    const desconto = {
-        description, value
+    const res = confirm("Tem certeza que deseja que desja realizar esta ação")
+    if (res === true) {
+        const index = e.target.id.value
+        const indexDescontos = e.target.id.value
+        const description = e.target.description.value
+        const value = e.target.value.value
+        const desconto = {
+            description, value
+        }
+        getFuncionarios[index].descontos[indexDescontos] = desconto
+        localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
+        setTimeout(() => location.reload(), 500)
     }
-    getFuncionarios[index].descontos[indexDescontos] = desconto
-    localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
-    setTimeout(() => location.reload(), 500)
 }
 
-const renderAddDescontos = (param) => {
+const renderAddDescontos = async (param, paramTitle) => {
     const data = {
-        title: 'Add Descontos',
+        title: paramTitle,
         name: {
             name: 'desconto',
             text: 'Desconto',
@@ -391,6 +479,7 @@ const renderAddDescontos = (param) => {
         hidden: param,
     }
     controlModal()
+    await setInfoFuncionario(param)
     const formEdit = form(data)
     formEdit.addEventListener('submit', addDescontos)
     modalContent.append(formEdit)
@@ -409,87 +498,132 @@ const addDescontos = (e) => {
     setTimeout(() => location.reload(), 500)
 }
 
-const renderDescontosAll = (param, param2) => {
-    const getFuncionarios = localStorage.getItem('funcionario')
-    const data = JSON.parse(getFuncionarios)
+const renderDescontosAll = async (paramUser, paramIndex) => {
+    const data = await getFuncionarios[paramUser][paramIndex]
     controlModal()
-    data[param][param2].forEach(el => {
+    await setInfoFuncionario(paramUser)
+    const div = document.createElement('div')
+    div.classList.add('loop_info')
+    const h3 = document.createElement('h3')
+    h3.innerHTML = paramIndex
+    data.forEach((el, i) => {
         const p = document.createElement('p')
-        content = `${el.description}, ${el.value}`
-        p.append(content)
-        modalContent.append(p)
+        p.innerHTML = `${el.description}, ${el.value}`
+        const divContext = document.createElement('div')
+        divContext.append(p)
+        const buttonEdit = document.createElement('button')
+        buttonEdit.classList.add('btn')
+        buttonEdit.innerHTML = 'Editar'
+        buttonEdit.onclick = () => renderEditDescontos(paramUser, i)
+        divContext.appendChild(buttonEdit)
+        const buttonDel = document.createElement('button')
+        buttonDel.classList.add('btn')
+        buttonDel.innerHTML = 'Delete'
+        buttonDel.onclick = () => deleteUnique(paramUser, i, 'descontos')
+        divContext.append(buttonDel)
+        div.append(divContext)
     })
+    div.prepend(h3)
+    modalContent.append(div)
+}
+
+// deletar um registro em uma coleção
+const deleteUnique = async (paramUser, paramIndex, paramObj) => {
+    const res = confirm('Tem certeza do que está Fazendo?')
+    if (res === true) {
+        if (getFuncionarios[paramUser].hasOwnProperty(paramObj)) {
+            const arr = await getFuncionarios[paramUser][paramObj]
+            arr.splice(paramIndex, 1);
+            localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
+            setTimeout(() => location.reload(), 500)
+        }
+    }
 }
 
 const renderTable = () => {
+    const tbody = document.createElement('tbody')
     getFuncionarios.forEach((func, index) => {
         const tdNome = document.createElement('td')
         const buttonNome = document.createElement('button')
         buttonNome.innerHTML = 'Edit'
+        const tdButtonName = document.createElement('td')
         buttonNome.onclick = () => renderEditFuncionario(index)
         const tdFunc = document.createElement('td')
         const tdFaltas = document.createElement('td')
         const tdAddFaltas = document.createElement('td')
+        const buttonAddFaltas = document.createElement('a')
         const tdHorasExtras = document.createElement('td')
         const buttonHorasExtras = document.createElement('button')
+        const tdHorasExtras2 = document.createElement('td')
+        const buttonHorasExtras2 = document.createElement('button')
         const tdDescontos = document.createElement('td')
-        const a = document.createElement('a')
+        const tdDescontos2 = document.createElement('td')
 
-        tdNome.append(func.name)
-        tdNome.append(buttonNome)
-        const fQty = document.createElement('a')
-        fQty.id = index
+        tdNome.append(func.name + " ")
+        tdButtonName.append(buttonNome)
+        // tdNome.append(buttonNome)
 
-        a.id = index + 1
-        a.innerText = 'add'
-        // a.onclick = addFaltasButton
-        a.style.padding = '0 2px'
-        tdAddFaltas.append(a)
+        buttonAddFaltas.id = index
+        buttonAddFaltas.innerText = 'Add'
+        buttonAddFaltas.onclick = () => renderRegisterFaltas(index)
+        buttonAddFaltas.style.padding = '0 2px'
+        tdAddFaltas.append(buttonAddFaltas)
         const tr = document.createElement('tr')
 
         tr.append(tdNome)
         tdFunc.append(func.func)
         tr.append(tdFunc)
+        tr.append(tdButtonName)
 
-        if (func?.faltas && func.faltas.length !== 0) {
-            // fQty.onclick = showFaltas
-            fQty.innerHTML = func.faltas.length
-            tdFaltas.append(fQty)
+        if (func.hasOwnProperty('faltas') && func.faltas.length !== 0) {
+            const button = document.createElement('button')
+            button.onclick = (e) => renderFaltasOrHorasextras(index, 'faltas')
+            button.innerHTML = func.faltas.length
+            tdFaltas.append(button)
         } else {
             tdFaltas.append('0')
         }
-        if (func?.horas_extras && func.horas_extras.length !== 0) {
+        if (func.hasOwnProperty('horas_extras') && func.horas_extras.length !== 0) {
             const value = func.horas_extras.length
-            buttonHorasExtras.innerHTML = `${value} registros`
+            buttonHorasExtras.innerHTML = `${value} registro(s)`
+            buttonHorasExtras.onclick = (e) => renderFaltasOrHorasextras(index, 'horas_extras')
             tdHorasExtras.append(buttonHorasExtras)
         } else {
-            buttonHorasExtras.innerHTML = `Registrar`
-            tdHorasExtras.append(buttonHorasExtras)
+            tdHorasExtras.append('0 registro')
         }
+        buttonHorasExtras2.innerHTML = 'Registrar'
+        buttonHorasExtras2.onclick = () => renderRegisterHorasExtras(index)
+        tdHorasExtras2.append(buttonHorasExtras2)
+
         if (func?.descontos && func.descontos.length !== 0) {
             const value = Array.from(func.descontos)
                 .reduce((acc, cur) => acc + parseFloat(cur.value), 0)
-            tdDescontos.append(`R$ ${value} `)
+            tdDescontos.append(`R$ ${parseFloat(value).toFixed(2)} `)
 
-            const a = document.createElement('a')
-            // a.onclick = showDescontosButton
-            a.id = index
-            a.innerHTML += 'ver'
-            tdDescontos.append(a)
+            const button = document.createElement('button')
+            button.onclick = () => renderDescontosAll(index, 'descontos')
+            button.id = index
+            button.innerHTML += 'Detalhes'
+            tdDescontos.append(button)
         } else {
-            const a = document.createElement('a')
-            // a.onclick = addDescontosButton
-            a.innerHTML = 'add'
-            a.id = index
-            tdDescontos.append(a)
+            tdDescontos.append('R$ 00.00')
+
         }
+        const buttonAddDescontos2 = document.createElement('button')
+        buttonAddDescontos2.onclick = () => renderAddDescontos(index, 'Add Descontos')
+        buttonAddDescontos2.innerHTML = 'Add'
+        tdDescontos2.append(buttonAddDescontos2)
 
         tr.append(tdFaltas)
         tr.append(tdAddFaltas)
         tr.append(tdHorasExtras)
+        tr.append(tdHorasExtras2)
         tr.append(tdDescontos)
-        table.appendChild(tr)
+        tr.append(tdDescontos2)
+        tbody.append(tr)
+       
     });
+    table.appendChild(tbody)
 }
 
 window.addEventListener('load', renderTable)

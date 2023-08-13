@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Funcionário</title>
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/funcionario.js" defer></script>
+</head>
+
+<body>
+    <div style="width: 600px; margin: auto;">
+        <div class="container-form">
+            <div><a href="./index.html" style="display: block;width: 400px;">Voltar</a></div>
+            <form>
+                <h3>Cadastrar Funcionário</h3>
+                <div class="form-control">
+                    <label for="name">Nome:</label>
+                    <input type="text" name="name" id="name">
+                </div>
+                <div class="form-control">
+                    <label for="func">Funçao:</label>
+                    <input type="text" name="func" id="func">
+                </div>
+                <input class="btn" style="margin-top: 0;" type="submit" value="Cadastrar">
+            </form>
+        </div>
+        <div id="funcsAll">
+            <table>
+                <caption>Todos os funcionarios</caption>
+                <thead>
+                    <tr>
+                        <td>#</td>
+                        <td>Nome</td>
+                        <td>Funcão</td>
+                    </tr>
+                </thead>
+                <tbody id="body_table">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

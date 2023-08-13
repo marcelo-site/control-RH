@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle RH</title>
-    <link rel="stylesheet" href="/src/assets/style.css">
+    <link rel="stylesheet" href="../assets/style.css">
     <script src="../assets/index.js" defer></script>
+    <script src="../assets/empty_control.js" defer></script>
 </head>
+
 <body>
     <header>
         <nav>
             <ul>
-                <li><a href="./register.html" class="btn">Cadastrar funcionário</a></li>
-                <li><a onclick="ConfirmEmptyFaltas()" class="btn">Zerar controle</a></li>
+                <li><a href="./funcionarios.html" class="btn">Funcionários</a></li>
+                <li><a onclick="controlModalEmpty()" class="btn">Zerar controle</a></li>
             </ul>
         </nav>
     </header>
@@ -21,25 +24,47 @@
             <table>
                 <caption>Funcionários</caption>
                 <thead>
-                    <tr>
-                        <td>Nome</td>
-                        <td>Função</td>
-                        <td colspan="2">Faltas</td>
-                        <td>horas extras</td>
-                        <td>Descontos*</td>
-                    </tr>
+                    <td colspan="3">Nome e Função</td>
+                    <!-- <td>Função</td> -->
+                    <td colspan="2">Faltas</td>
+                    <td colspan="2">Horas extras</td>
+                    <td colspan="2">Descontos*</td>
                 </thead>
+               
             </table>
             <p>* Os descontos não representam as faltas.</p>
         </div>
 
         <div class="modal none">
             <span class="exit" onclick="controlModal()">X</span>
+            <div id="info"></div>
             <div id="modal-content"></div>
             <button class="btn" onclick="controlModal()">Fechar</button>
         </div>
-        <button onclick="renderFaltasOrHorasextras(0,'horas_extras')">add</button>
-    </main>
 
+        <div class="modal none" id="empty_data">
+            <span class="exit" onclick="controlModalEmpty()">X</span>
+            <form class="container-form">
+                <div>
+                    <div class="form-empty">
+                        <label for="empty_faltas">Zerar Faltas:</label>
+                        <input type="checkbox" name="empty_faltas" id="empty_faltas" checked>
+                    </div>
+                    <div class="form-empty">
+                        <label for="empty_hrs_extras">Zerar Horas extras:</label>
+                        <input type="checkbox" name="empty_hrs_extras" id="empty_hrs_extras" checked>
+                    </div>
+                    <div class="form-empty">
+                        <label for="empty_descontos">Zerar descontos:</label>
+                        <input type="checkbox" name="empty_descontos" id="empty_descontos" checked>
+                    </div>
+                    <input type="submit" value="Zerar" class="btn">
+                </div>
+            </form>
+            <button class="btn" onclick="controlModalEmpty()">Fechar</button>
+        </div>
+    </main>
+    <div id="background" class="none"></div>
 </body>
+
 </html>

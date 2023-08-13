@@ -19,9 +19,18 @@ header nav ul li a {
     text-decoration: none;
     color: white;
 }
+
 body {
     margin: 1em 0;
 }
+
+
+
+thead {
+    text-align: center;
+    font-weight: bold;
+}
+
 table,
 tr,
 td {
@@ -36,7 +45,8 @@ table,
     max-width: 800px;
 }
 
-table a {
+table a,
+table button {
     cursor: pointer;
     padding: 2px 3px;
     background-color: black;
@@ -44,7 +54,8 @@ table a {
     border: 1px solid;
 }
 
-table a:hover {
+table a:hover,
+table button:hover {
     background-color: white;
     color: black;
 }
@@ -61,9 +72,13 @@ caption {
     margin: 0.8em 0;
 }
 
-tr:nth-child(1),
+thead tr {
+    /* background-color: rgb(242, 233, 233); */
+    background-color: rgb(233 224 224);
+}
+
 table tr:nth-child(even) {
-    background-color: rgb(242, 233, 233);
+    background-color:rgb(233 224 224);
 }
 
 form {
@@ -83,8 +98,8 @@ form input[type='submit'] {
     margin: 1em auto;
 }
 
-.container-form h3 {
-    font-size: 2em;
+form h3 {
+    font-size: 1.8em;
     border-left: 3px solid;
     padding-left: 5px;
     margin-bottom: .8em;
@@ -119,7 +134,7 @@ form input[type='submit'] {
     font-size: 1em;
 }
 
-.container-date input{
+.container-date input {
     font-size: 1.2em;
 }
 
@@ -137,7 +152,7 @@ form input[type='submit'] {
     margin-left: 0;
 }
 
-.container-time input{
+.container-time input {
     font-size: 1.2em;
 }
 
@@ -153,7 +168,7 @@ form input[type='submit'] {
 
 .btn:hover {
     background-color: black;
-    color: white; 
+    color: white;
 }
 
 .modal {
@@ -163,17 +178,30 @@ form input[type='submit'] {
     flex-direction: column;
     justify-content: center;
     align-items: start;
-    width: 600px;
+    max-width: 800px;
+    min-width: 70vw;
     background-color: white;
     z-index: 20;
     margin: auto;
-    right: calc(50vw - 300px);
+    /* right: calc(50vw - 400px); */
+    right: calc(15vw);
     padding: 0 0 1.5em 1em;
     overflow: auto;
     max-height: 90%;
 }
 
+.modal button {
+    margin-top: .5em;
+}
+
+#modal-content {
+    width: 100%;
+}
+
 .exit {
+    position: absolute;
+    right: 0;
+    top: 0;
     background-color: red;
     color: white;
     padding: 2px 5px;
@@ -182,9 +210,19 @@ form input[type='submit'] {
     cursor: pointer;
 }
 
+#background {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: #000000a3;
+    top: 0;
+    z-index: 10;
+}
+
 .point_none {
     pointer-events: none !important;
 }
+
 .none {
     display: none !important;
 }
@@ -195,4 +233,47 @@ form input[type='submit'] {
 
 .grid_value:nth-child(1) {
     width: 70%;
+}
+
+.loop_info {
+    font-size: 1em;
+}
+
+h3 {
+    color: #1e1e99;
+}
+
+.loop_info h3 {
+    text-transform: capitalize;
+    color: #1e1e99;
+    border-left: 3px solid;
+    font-size: 1.5em;
+    padding-left: 5px;
+    margin: .5em 0;
+}
+
+.loop_info button.btn {
+    font-size: .8em;
+    margin: .5em;
+    margin-left: 0;
+}
+
+.loop_info div {
+    border-bottom: 1px solid;
+    width: 100%;
+}
+
+.form-empty {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+#funcsAll span {
+    display: inline-block;
+    margin-left: 0.5em;
+    margin-top: 0.6em;
+}
+
+#funcsAll td {
+    text-align: center;
 }
