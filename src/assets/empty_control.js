@@ -6,7 +6,6 @@ const formEmpty = document.querySelector('#empty_data form')
 const emptyControl = (e) => {
     e.preventDefault()
     const res = confirm('Tem certeza que apagar esse(s) dado(s)?')
-    console.log(e.target)
     if (res === true) {
         if (e.target.empty_faltas.checked) {
             emptyObject.forEach(el => {

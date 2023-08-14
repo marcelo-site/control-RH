@@ -1,0 +1,95 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    margin: 1em auto;
+}
+
+a {
+    display: block;
+    width: 50vw;
+    text-align: center;
+    margin: 1em auto;
+}
+:root {
+    --primary-color: #1e1e99;
+}
+h1 {
+    color: var(--primary-color);
+    text-align: center;
+    margin: .5em 0;
+}
+.flex {
+    margin-left: .5em;
+    margin-bottom: .5em;
+}
+
+.flex div {
+    margin-bottom: 0;
+    display: flex;
+    justify-content: flex-start;
+    border: 1px solid;
+}
+
+#relatorio {
+    min-width: 90vw;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.content {
+    box-shadow: 1px -2px 8px #00000030;
+    border: 1px solid;
+    margin-bottom: 1em;
+}
+
+.content div:nth-child(1) {
+    background-color: #34383973;
+    display: grid;
+    justify-content: stretch;
+    gap: 1em;
+    grid-template-columns: 170px 1fr;
+}
+
+.content div:nth-child(1) p {
+    display: flex;
+    gap: 10px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.content div {
+    border-bottom: 1px solid;
+    padding: 5px;
+}
+.content p {
+    display: grid;
+    grid-template-columns: 55px 16.5em 39px 43px 25px 45px 110px 1fr;
+}
+
+.content p.desconto {
+    display: flex;
+    gap: 5px
+}
+
+.content p:nth-child(1):not(.content div:nth-child(1) p) {
+    display: block;
+    margin: -5px;
+    margin-bottom: 5px;
+    padding: 5px;
+    background-color: rgb(233 224 224);
+    border-bottom: 1px solid;
+}
+
+.content span {
+    margin-left: .5em;
+}
+
+.isactive:hover {
+    background-color: #a0a0e7;
+}
+

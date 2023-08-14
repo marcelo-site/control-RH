@@ -2,8 +2,12 @@ const table = document.querySelector('table')
 
 const modalContent = document.querySelector('#modal-content')
 const modalInfo = document.querySelector('#info')
-const getLocalStorage = localStorage.getItem('funcionario')
-const getFuncionarios = JSON.parse(getLocalStorage) || undefined
+const getLocalStorage = localStorage.getItem('funcionario') || undefined
+
+if (!getLocalStorage) {
+    window.location.pathname = "/src/pages/funcionarios.html"
+}
+const getFuncionarios = JSON.parse(getLocalStorage)
 
 const controlModal = (param) => {
     const node = document.querySelector('#modal-content div')
@@ -102,7 +106,7 @@ const form = (param) => {
     return div
 }
 
-const renderEditFuncionario =async (paramUser) => {
+const renderEditFuncionario = async (paramUser) => {
     const func = {
         title: 'Editar Funcionário',
         name: {
@@ -117,7 +121,7 @@ const renderEditFuncionario =async (paramUser) => {
         hidden: paramUser,
         submit: 'Editar'
     }
-   
+
     const formEdit = form(func, "editar")
     formEdit.addEventListener('submit', editFuncionario)
     controlModal()
@@ -157,9 +161,9 @@ const inputSetDate = () => {
             text: 'à',
             value: '11:30',
             name: 'end'
-        }, motivo: {
-            text: 'Motivo',
-            name: 'motivo'
+        }, obs: {
+            text: 'Observação',
+            name: 'obs'
         }
     }
 }
@@ -190,8 +194,8 @@ const renderFaltasOrHorasextras = async (paramUser, paramObj) => {
         h3.innerHTML = paramObj
         data.forEach((el, i) => {
             const p = document.createElement('p')
-            const content = `${el.date} de ${el.init} à ${el.end}, motivo: ${el.motivo}`
-            p.append(content)
+            const content = `<span class="bold">Data: </span>${el.date} de ${el.init} à ${el.end}, <span class="bold">Observação: </span> ${el.obs}`
+            p.innerHTML= content
             const divContext = document.createElement('div')
             divContext.append(p)
             const buttonEdit = document.createElement('button')
@@ -211,8 +215,8 @@ const renderFaltasOrHorasextras = async (paramUser, paramObj) => {
         h3.innerHTML = paramObj
         data.forEach((el, i) => {
             const p = document.createElement('p')
-            const content = `${el.date} de ${el.init} à ${el.end}`
-            p.append(content)
+            const content = `<span class="bold">Data: </span>${el.date} de ${el.init} à ${el.end}`
+            p.innerHTML = content
             const divContext = document.createElement('div')
             divContext.append(p)
             const buttonEdit = document.createElement('button')
@@ -249,7 +253,7 @@ const formHorasExtras = (paramUser, param) => {
     init.value = param?.init || '05:30'
     const end = inputDate.end
     end.value = param?.end || '09:00'
-    if(paramUser !== undefined) {
+    if (paramUser !== undefined) {
         inputHidden.value = paramUser
     }
     // if (param !== undefined) {
@@ -273,8 +277,8 @@ const setFaltasOrhorasextras = (e, obj, param) => {
     const index = param
     const description = valuesInputDate(e)
 
-    if (e.target.hasOwnProperty('motivo')) {
-        description.motivo = e.target.motivo.value
+    if (e.target.hasOwnProperty('obs')) {
+        description.obs = e.target.obs.value
     }
     if (getFuncionarios[index].hasOwnProperty(obj)) {
         getFuncionarios[index][obj].push(description)
@@ -292,8 +296,8 @@ const editFaltasOrhorasExtras = (e, paramObj, paramIndex) => {
     if (res === true) {
         const index = parseInt(e.target?.id?.value)
         const description = valuesInputDate(e)
-        if (e.target.hasOwnProperty('motivo')) {
-            description.motivo = e.target.motivo.value
+        if (e.target.hasOwnProperty('obs')) {
+            description.obs = e.target.obs.value
         }
         if (getFuncionarios[index].hasOwnProperty(paramObj)) {
             getFuncionarios[index][paramObj][paramIndex] = description
@@ -326,7 +330,7 @@ const renderEditHorasExtras = async (paramUser, paramIndex) => {
         submit: 'Editar'
     }
     controlModal(true)
-    const register = formHorasExtras(paramUser,data)
+    const register = formHorasExtras(paramUser, data)
     register.addEventListener('submit', (e) =>
         editFaltasOrhorasExtras(e, 'horas_extras', paramIndex))
     modalContent.append(register)
@@ -345,14 +349,14 @@ const formFaltas = (param) => {
     const date = inputDate.date
     const init = inputDate.init
     const end = inputDate.end
-    const motivo = inputDate.motivo
+    const obs = inputDate.obs
 
     if (param) {
         inputHidden.value = param.id
         date.value = param.date
         init.value = param.init
         end.value = param.end
-        motivo.value = param.motivo
+        obs.value = param.obs
     }
     form.append(h3)
     form.append(inputHidden)
@@ -360,7 +364,7 @@ const formFaltas = (param) => {
     form.append(input(init))
     form.append(input(end))
 
-    form.append(input(motivo))
+    form.append(input(obs))
     form.append(submit(param?.submit))
     div.append(form)
     return div
@@ -384,7 +388,7 @@ const renderEditFaltas = async (paramUser, paramIndex) => {
         date: faltas.inputDate,
         init: faltas.init,
         end: faltas.end,
-        motivo: faltas.motivo,
+        obs: faltas.obs,
         submit: 'Editar'
     }
     controlModal(true)
@@ -471,7 +475,7 @@ const renderAddDescontos = async (param, paramTitle) => {
         title: paramTitle,
         name: {
             name: 'desconto',
-            text: 'Desconto',
+            text: 'Decriçao',
         }, funcao: {
             name: 'value',
             text: 'Valor'
@@ -508,7 +512,7 @@ const renderDescontosAll = async (paramUser, paramIndex) => {
     h3.innerHTML = paramIndex
     data.forEach((el, i) => {
         const p = document.createElement('p')
-        p.innerHTML = `${el.description}, ${el.value}`
+        p.innerHTML = `<span class="bold">Descrição: </span>${el.description}, <span class="bold">Valor: </span> ${el.value}`
         const divContext = document.createElement('div')
         divContext.append(p)
         const buttonEdit = document.createElement('button')
@@ -621,7 +625,7 @@ const renderTable = () => {
         tr.append(tdDescontos)
         tr.append(tdDescontos2)
         tbody.append(tr)
-       
+
     });
     table.appendChild(tbody)
 }

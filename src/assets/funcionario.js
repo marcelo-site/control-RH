@@ -1,6 +1,6 @@
 const form = document.querySelector('form')
-const getLocalStorage = localStorage.getItem('funcionario') || undefined
-const getFuncionarios = JSON.parse(getLocalStorage) 
+const getLocalStorage =  localStorage.getItem('funcionario')|| undefined
+let getFuncionarios = getLocalStorage ? JSON.parse(getLocalStorage) : []
 
 form.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -14,12 +14,9 @@ form.addEventListener('submit', (e) => {
         horas_extras: [],
         descontos: []
     }
-    if (getFuncionarios) {
-        getFuncionarios.push(funcionario)
-    } else {
-        getFuncionarios = [funcionario]
-    }
+    getFuncionarios.push(funcionario)
     localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
+    setTimeout(() => location.reload(), 500)
 })
 
 const funcsAll = () => {
@@ -40,4 +37,9 @@ const funcsAll = () => {
     })
 }
 
-window.addEventListener('load', funcsAll)
+window.addEventListener('load',() => {
+    console.log(getFuncionarios.length)
+    if(getFuncionarios.length > 0) {
+        return funcsAll()
+    }
+} )

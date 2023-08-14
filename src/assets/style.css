@@ -5,6 +5,10 @@
     box-sizing: border-box;
 }
 
+:root {
+    --primary-color: #1e1e99;
+}
+
 header nav ul {
     display: flex;
     justify-content: center;
@@ -23,8 +27,6 @@ header nav ul li a {
 body {
     margin: 1em 0;
 }
-
-
 
 thead {
     text-align: center;
@@ -67,18 +69,29 @@ table button:hover {
     align-items: center;
 }
 
+table tbody tr:hover {
+    background-color: #a0a0e7;
+}
+
 caption {
+    color: var(--primary-color);
+    font-weight: bold;
     font-size: 1.5em;
     margin: 0.8em 0;
 }
 
+thead {
+    box-shadow: 1px -2px 8px #00000030;
+}
+tbody {
+    box-shadow: 1px 3px 8px #00000030;
+}
 thead tr {
-    /* background-color: rgb(242, 233, 233); */
     background-color: rgb(233 224 224);
 }
 
 table tr:nth-child(even) {
-    background-color:rgb(233 224 224);
+    background-color: rgb(233 224 224);
 }
 
 form {
@@ -183,10 +196,9 @@ form h3 {
     background-color: white;
     z-index: 20;
     margin: auto;
-    /* right: calc(50vw - 400px); */
-    right: calc(15vw);
+    right: 15vw;
     padding: 0 0 1.5em 1em;
-    overflow: auto;
+    overflow: hidden;
     max-height: 90%;
 }
 
@@ -236,16 +248,18 @@ form h3 {
 }
 
 .loop_info {
+    max-height: 400px;
+    overflow: auto;
     font-size: 1em;
 }
 
 h3 {
-    color: #1e1e99;
+    color: var(--primary-color);
 }
 
 .loop_info h3 {
     text-transform: capitalize;
-    color: #1e1e99;
+    color: var(--primary-color);
     border-left: 3px solid;
     font-size: 1.5em;
     padding-left: 5px;
@@ -276,4 +290,10 @@ h3 {
 
 #funcsAll td {
     text-align: center;
+}
+
+input[type='checkbox'] {
+    margin-bottom: 0.5em;
+    width: 17px;
+    height: 17px;
 }

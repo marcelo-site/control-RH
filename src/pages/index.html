@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../assets/style.css">
     <script src="../assets/index.js" defer></script>
     <script src="../assets/empty_control.js" defer></script>
+    <script src="../assets/backup.js"></script>
 </head>
 
 <body>
@@ -15,6 +16,7 @@
         <nav>
             <ul>
                 <li><a href="./funcionarios.html" class="btn">Funcionários</a></li>
+                <li><a href="./relatorio.html" class="btn">Relatório</a></li>
                 <li><a onclick="controlModalEmpty()" class="btn">Zerar controle</a></li>
             </ul>
         </nav>
@@ -22,17 +24,15 @@
     <main>
         <div id="table">
             <table>
-                <caption>Funcionários</caption>
+                <caption>Controle</caption>
                 <thead>
                     <td colspan="3">Nome e Função</td>
                     <!-- <td>Função</td> -->
                     <td colspan="2">Faltas</td>
                     <td colspan="2">Horas extras</td>
-                    <td colspan="2">Descontos*</td>
+                    <td colspan="2">Descontos</td>
                 </thead>
-               
             </table>
-            <p>* Os descontos não representam as faltas.</p>
         </div>
 
         <div class="modal none">
@@ -45,6 +45,8 @@
         <div class="modal none" id="empty_data">
             <span class="exit" onclick="controlModalEmpty()">X</span>
             <form class="container-form">
+                <h3>Zerar Controle</h3>
+                <p style="width:75%;font-size: .8em;margin: -1.2em 0 1em;">escolha um ou mais campo a ser totalmante limpo.</p>
                 <div>
                     <div class="form-empty">
                         <label for="empty_faltas">Zerar Faltas:</label>
