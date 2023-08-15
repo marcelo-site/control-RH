@@ -15,6 +15,8 @@
     <header>
         <nav>
             <ul>
+                <button onclick="exportBackup()" style=" position: absolute; left: 0; top: 5px;
+                padding: 2px;">Fazer backup</button>
                 <li><a href="./funcionarios.html" class="btn">Funcionários</a></li>
                 <li><a href="./relatorio.html" class="btn">Relatório</a></li>
                 <li><a onclick="controlModalEmpty()" class="btn">Zerar controle</a></li>
@@ -27,7 +29,6 @@
                 <caption>Controle</caption>
                 <thead>
                     <td colspan="3">Nome e Função</td>
-                    <!-- <td>Função</td> -->
                     <td colspan="2">Faltas</td>
                     <td colspan="2">Horas extras</td>
                     <td colspan="2">Descontos</td>

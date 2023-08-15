@@ -15,26 +15,20 @@ const createWindow = async () => {
     })
 
     await mainWindow.loadFile('src/pages/index.html')
-    mainWindow.webContents.openDevTools()
-
+    // mainWindow.webContents.openDevTools()
     createNewFile()
-   
+    ipcMain.on('export-backup', (e, data) => {
+        file.content = data
+        saveFileAs()
+    })
 }
-//arquivo
-let file = {}
 
+const file = {}
 // //criar novo arquivo
 const createNewFile = () => {
-    const date = new Date()
-    const arquive = `\\backup-RH-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`
-        + `-${date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1}`
-        + `-${date.getFullYear()}.txt`
-    file = {
-        name: 'backup-RH.txt',
-        content: '',
-        saved: false,
-        path: app.getPath('documents') + arquive
-    }
+        file.name = 'backup-RH.txt',
+        file.path = app.getPath('documents') + '/backup-RH.txt'
+        return file
 }
 
 // salvar backup no disco
@@ -45,16 +39,15 @@ const writeFile = (filePath) => {
 
             //arquivo salvo
             file.path = filePath
-            file.saved = true
             file.name = path.basename(filePath)
         })
-
     } catch (err) {
         console.log(err)
     }
 }
 
 const saveFileAs = async () => {
+    createNewFile()
     let dialogFile = await dialog.showSaveDialog({
         defaultPath: file.path
     })
@@ -62,14 +55,7 @@ const saveFileAs = async () => {
         return false
     }
     // salvar
-   
-    ipcMain.on('export-backup', (e, data) => {
-        file.content = data
-        console.log(file)
-        // saveFileAs()
-    })
     writeFile(dialogFile.filePath)
-    createNewFile()
 }
 // ler arquivo
 const readFile = (filePath) => {
@@ -89,15 +75,12 @@ const openBackup = async () => {
     if (dialogFile.canceled) {
         return false
     }
-
     // abrir arquivo
-    file = {
-        name: path.basename(dialogFile.filePaths[0]),
-        content: readFile(dialogFile.filePaths[0]),
-        saved: true,
-        path: dialogFile.filePaths[0]
-    }
-    mainWindow.webContents.send('save-backup', file)
+    file.name = path.basename(dialogFile.filePaths[0])
+    file.content = readFile(dialogFile.filePaths[0])
+    file.path = dialogFile.filePaths[0]
+    // salvar no frontend
+    mainWindow.webContents.send('save-backup', file.content)
 }
 
 //template menu
@@ -105,19 +88,14 @@ const templateMenu = [
     {
         label: "Backup",
         submenu: [
-             {
+            {
                 label: "Importar",
                 click() {
                     openBackup()
                 }
             }, {
-                label: "Exportar",
-                click() {
-                    saveFileAs()
-                }
-            },{
                 type: 'separator'
-            },{
+            }, {
                 label: "Fechar App",
                 accelerator: 'CmdOrCtrl+Q',
                 role: process.platform === "darwin" ? "close" : "quit"
@@ -130,12 +108,20 @@ const templateMenu = [
             {
                 label: "Site",
                 click() {
+                    shell.openExternal('https://marcelo-site.github.io/landing-page/')
+                },
+                label: "Facebook",
+                click() {
                     shell.openExternal('https://www.facebook.com/profile.php?id=100015225941991')
+                },
+                label: "Instagram",
+                click() {
+                    shell.openExternal('https://www.instagram.com/marcelosouza5224/')
                 }
             }
         ]
     }, {
-        label: 'Authors',
+        label: 'Autor',
         submenu: [{
             label: "Marcelo",
             click() {

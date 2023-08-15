@@ -18,11 +18,11 @@
                 <h3>Cadastrar Funcionário</h3>
                 <div class="form-control">
                     <label for="name">Nome:</label>
-                    <input type="text" name="name" id="name">
+                    <input type="text" name="name" id="name" tabindex="0" required>
                 </div>
                 <div class="form-control">
                     <label for="func">Funçao:</label>
-                    <input type="text" name="func" id="func">
+                    <input type="text" name="func" id="func" tabindex="1" required>
                 </div>
                 <input class="btn" style="margin-top: 0;" type="submit" value="Cadastrar">
             </form>
@@ -35,6 +35,7 @@
                         <td>#</td>
                         <td>Nome</td>
                         <td>Funcão</td>
+                        <td></td>
                     </tr>
                 </thead>
                 <tbody id="body_table">

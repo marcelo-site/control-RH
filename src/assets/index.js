@@ -1,13 +1,11 @@
-const table = document.querySelector('table')
+if (!localStorage.hasOwnProperty('funcionario')) {
+    localStorage.setItem('funcionario', JSON.stringify([]))
+}
 
+const table = document.querySelector('table')
 const modalContent = document.querySelector('#modal-content')
 const modalInfo = document.querySelector('#info')
-const getLocalStorage = localStorage.getItem('funcionario') || undefined
-
-if (!getLocalStorage) {
-    window.location.pathname = "/src/pages/funcionarios.html"
-}
-const getFuncionarios = JSON.parse(getLocalStorage)
+const getFuncionarios = JSON.parse(localStorage.getItem('funcionario'))
 
 const controlModal = (param) => {
     const node = document.querySelector('#modal-content div')
@@ -121,6 +119,7 @@ const renderEditFuncionario = async (paramUser) => {
         hidden: paramUser,
         submit: 'Editar'
     }
+
 
     const formEdit = form(func, "editar")
     formEdit.addEventListener('submit', editFuncionario)
@@ -433,7 +432,7 @@ const formDescontos = (param) => {
 
 const renderEditDescontos = (paramUser, paramIndex) => {
     const data = {
-        title: 'Edit Descontos',
+        title: 'Editar Descontos',
         name: {
             name: 'description',
             text: 'Descição',
@@ -531,6 +530,18 @@ const renderDescontosAll = async (paramUser, paramIndex) => {
     modalContent.append(div)
 }
 
+// delete funcionario
+const deleteFunc = async (paramIndex) => {
+    const res = confirm("Deseja deletar esse funcionario da base de dados?")
+    if (res === true) {
+        const arr = await getFuncionarios
+        arr.splice(paramIndex, 1);
+        localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
+        setTimeout(() => location.reload())
+    }
+}
+
+
 // deletar um registro em uma coleção
 const deleteUnique = async (paramUser, paramIndex, paramObj) => {
     const res = confirm('Tem certeza do que está Fazendo?')
@@ -549,7 +560,7 @@ const renderTable = () => {
     getFuncionarios.forEach((func, index) => {
         const tdNome = document.createElement('td')
         const buttonNome = document.createElement('button')
-        buttonNome.innerHTML = 'Edit'
+        buttonNome.innerHTML = 'Editar'
         const tdButtonName = document.createElement('td')
         buttonNome.onclick = () => renderEditFuncionario(index)
         const tdFunc = document.createElement('td')

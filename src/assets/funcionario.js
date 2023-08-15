@@ -1,5 +1,5 @@
 const form = document.querySelector('form')
-const getLocalStorage =  localStorage.getItem('funcionario')|| undefined
+const getLocalStorage = localStorage.getItem('funcionario') || undefined
 let getFuncionarios = getLocalStorage ? JSON.parse(getLocalStorage) : []
 
 form.addEventListener('submit', (e) => {
@@ -19,9 +19,28 @@ form.addEventListener('submit', (e) => {
     setTimeout(() => location.reload(), 500)
 })
 
+const deleteFunc = async (paramIndex) => {
+
+    if (getFuncionarios.length > 1) {
+        const res = confirm('Deseja deletar esse funcionário da base de dados?')
+        if(res === true) {
+        const arr = await getFuncionarios
+        arr.splice(paramIndex, 1);
+        localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
+        setTimeout(() => location.reload())
+        }
+    } else {
+        const res = confirm('Unico funcionário, deseja apagar da base de dados?')
+        if(res === true) {
+        localStorage.setItem('funcionario', JSON.stringify([]))
+        setTimeout(() => location.reload())
+        }
+    }
+}
+
 const funcsAll = () => {
     const funcsAll = document.querySelector('#body_table')
-    
+
     getFuncionarios.forEach((func, i) => {
         const tr = document.createElement('tr')
         const tdIndex = document.createElement('td')
@@ -30,16 +49,23 @@ const funcsAll = () => {
         const tdName = document.createElement('td')
         tdName.innerHTML = func.name
         tr.append(tdName)
-        const tdFunc= document.createElement('td')
+        const tdFunc = document.createElement('td')
         tdFunc.innerHTML = func.func
         tr.append(tdFunc)
-        funcsAll.append(tr) 
+        const tdDel = document.createElement('td')
+        const button = document.createElement('button')
+        button.innerHTML = 'Delete'
+        button.onclick = () => deleteFunc(i)
+        tdDel.append(button)
+
+        tr.append(tdDel)
+        tr.append(tdDel)
+        funcsAll.append(tr)
     })
 }
 
-window.addEventListener('load',() => {
-    console.log(getFuncionarios.length)
-    if(getFuncionarios.length > 0) {
+window.addEventListener('load', () => {
+    if (getFuncionarios.length > 0) {
         return funcsAll()
     }
-} )
+})

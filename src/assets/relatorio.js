@@ -1,7 +1,6 @@
 const dataRelatrio = localStorage.getItem('funcionario')
 const contentRealtorio = document.querySelector('#relatorio')
 
-
 const renderRelatorio = async () => {
     const getRelatorio = await JSON.parse(dataRelatrio)
     getRelatorio.forEach(func => {
