@@ -15,9 +15,10 @@ const createWindow = async () => {
     })
 
     await mainWindow.loadFile('src/pages/index.html')
-    // mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools()
     createNewFile()
     ipcMain.on('export-backup', (e, data) => {
+        console.log(data)
         file.content = data
         saveFileAs()
     })
@@ -30,7 +31,7 @@ const createNewFile = () => {
         file.path = app.getPath('documents') + '/backup-RH.txt'
         return file
 }
-
+console.log(file)
 // salvar backup no disco
 const writeFile = (filePath) => {
     try {
@@ -92,6 +93,12 @@ const templateMenu = [
                 label: "Importar",
                 click() {
                     openBackup()
+                }
+            },
+            {
+                label: "Exportar",
+                click() {
+                    saveFileAs()
                 }
             }, {
                 type: 'separator'

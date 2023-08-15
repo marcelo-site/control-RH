@@ -12,4 +12,4 @@ function exportBackup() {
    return ipcRenderer.send('export-backup', localStorage.getItem('funcionario'))
 }
 
-// window.addEventListener('load', exportBackup)
+document.addEventListener('load', exportBackup)

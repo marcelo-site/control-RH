@@ -4,8 +4,8 @@ let getFuncionarios = getLocalStorage ? JSON.parse(getLocalStorage) : []
 
 form.addEventListener('submit', (e) => {
     e.preventDefault()
-    const name = form.name.value
-    const func = form.func.value
+    const name = e.target.name.value
+    const func = e.target.func.value
 
     const funcionario = {
         name,
@@ -16,25 +16,19 @@ form.addEventListener('submit', (e) => {
     }
     getFuncionarios.push(funcionario)
     localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
-    setTimeout(() => location.reload(), 500)
+    // setTimeout(() => location.reload(), 500)
 })
 
 const deleteFunc = async (paramIndex) => {
 
     if (getFuncionarios.length > 1) {
-        const res = confirm('Deseja deletar esse funcionário da base de dados?')
-        if(res === true) {
-        const arr = await getFuncionarios
-        arr.splice(paramIndex, 1);
-        localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
-        setTimeout(() => location.reload())
-        }
+            const arr = await getFuncionarios
+            arr.splice(paramIndex, 1);
+            localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
+            setTimeout(() => location.reload())
     } else {
-        const res = confirm('Unico funcionário, deseja apagar da base de dados?')
-        if(res === true) {
-        localStorage.setItem('funcionario', JSON.stringify([]))
-        setTimeout(() => location.reload())
-        }
+            localStorage.setItem('funcionario', JSON.stringify([]))
+            setTimeout(() => location.reload())
     }
 }
 

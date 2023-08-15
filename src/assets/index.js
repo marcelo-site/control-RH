@@ -120,7 +120,6 @@ const renderEditFuncionario = async (paramUser) => {
         submit: 'Editar'
     }
 
-
     const formEdit = form(func, "editar")
     formEdit.addEventListener('submit', editFuncionario)
     controlModal()
@@ -128,18 +127,15 @@ const renderEditFuncionario = async (paramUser) => {
     modalContent.append(formEdit)
 }
 
-const editFuncionario = (e) => {
+const editFuncionario = async (e) => {
     e.preventDefault()
-    const res = confirm('Tem certeza que deseja fazer esta ação')
-    if (res === true) {
-        const index = e.target.id.value
-        const name = e.target.name.value
-        const funcao = e.target.funcao.value
-        getFuncionarios[index].name = name
-        getFuncionarios[index].func = funcao
-        localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
-        setTimeout(() => location.reload(), 500)
-    }
+    const index = e.target.id.value
+    const name = e.target.name.value
+    const funcao = e.target.funcao.value
+    getFuncionarios[index].name = name
+    getFuncionarios[index].func = funcao
+    localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
+    setTimeout(() => location.reload(), 500)
 }
 const inputSetDate = () => {
     return {
@@ -194,19 +190,22 @@ const renderFaltasOrHorasextras = async (paramUser, paramObj) => {
         data.forEach((el, i) => {
             const p = document.createElement('p')
             const content = `<span class="bold">Data: </span>${el.date} de ${el.init} à ${el.end}, <span class="bold">Observação: </span> ${el.obs}`
-            p.innerHTML= content
+            p.innerHTML = content
             const divContext = document.createElement('div')
             divContext.append(p)
+            const divButons = document.createElement('div')
+            divButons.style = 'display: flex; gap: 400px;'
             const buttonEdit = document.createElement('button')
             buttonEdit.innerHTML = 'Editar'
             buttonEdit.classList.add('btn')
             buttonEdit.onclick = () => renderEditFaltas(paramUser, i)
-            divContext.appendChild(buttonEdit)
+            divButons.appendChild(buttonEdit)
             const buttonDel = document.createElement('button')
             buttonDel.classList.add('btn')
             buttonDel.innerHTML = 'Delete'
             buttonDel.onclick = () => deleteUnique(paramUser, i, paramObj)
-            divContext.append(buttonDel)
+            divButons.append(buttonDel)
+            divContext.append(divButons)
             div.append(divContext)
             return
         })
@@ -218,16 +217,19 @@ const renderFaltasOrHorasextras = async (paramUser, paramObj) => {
             p.innerHTML = content
             const divContext = document.createElement('div')
             divContext.append(p)
+            const divButons = document.createElement('div')
+            divButons.style = 'display: flex; gap: 300px;'
             const buttonEdit = document.createElement('button')
             buttonEdit.innerHTML = 'Editar'
             buttonEdit.classList.add('btn')
-            divContext.appendChild(buttonEdit)
+            divButons.appendChild(buttonEdit)
             buttonEdit.onclick = () => renderEditHorasExtras(paramUser, i)
             const buttonDel = document.createElement('button')
             buttonDel.classList.add('btn')
             buttonDel.innerHTML = 'Delete'
             buttonDel.onclick = () => deleteUnique(paramUser, i, paramObj)
-            divContext.append(buttonDel)
+            divButons.append(buttonDel)
+            divContext.append(divButons)
             div.append(divContext)
             return
         })
@@ -291,19 +293,16 @@ const setFaltasOrhorasextras = (e, obj, param) => {
 
 const editFaltasOrhorasExtras = (e, paramObj, paramIndex) => {
     e.preventDefault()
-    const res = confirm('Tem certeza que desja fazer esta ação?')
-    if (res === true) {
-        const index = parseInt(e.target?.id?.value)
-        const description = valuesInputDate(e)
-        if (e.target.hasOwnProperty('obs')) {
-            description.obs = e.target.obs.value
-        }
-        if (getFuncionarios[index].hasOwnProperty(paramObj)) {
-            getFuncionarios[index][paramObj][paramIndex] = description
-        }
-        localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
-        setTimeout(() => location.reload(), 500)
+    const index = parseInt(e.target?.id?.value)
+    const description = valuesInputDate(e)
+    if (e.target.hasOwnProperty('obs')) {
+        description.obs = e.target.obs.value
     }
+    if (getFuncionarios[index].hasOwnProperty(paramObj)) {
+        getFuncionarios[index][paramObj][paramIndex] = description
+    }
+    localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
+    setTimeout(() => location.reload(), 500)
 }
 
 const renderRegisterHorasExtras = async (paramUser) => {
@@ -454,8 +453,6 @@ const renderEditDescontos = (paramUser, paramIndex) => {
 
 const editDescontos = (e) => {
     e.preventDefault()
-    const res = confirm("Tem certeza que deseja que desja realizar esta ação")
-    if (res === true) {
         const index = e.target.id.value
         const indexDescontos = e.target.id.value
         const description = e.target.description.value
@@ -466,7 +463,6 @@ const editDescontos = (e) => {
         getFuncionarios[index].descontos[indexDescontos] = desconto
         localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
         setTimeout(() => location.reload(), 500)
-    }
 }
 
 const renderAddDescontos = async (param, paramTitle) => {
@@ -532,27 +528,20 @@ const renderDescontosAll = async (paramUser, paramIndex) => {
 
 // delete funcionario
 const deleteFunc = async (paramIndex) => {
-    const res = confirm("Deseja deletar esse funcionario da base de dados?")
-    if (res === true) {
         const arr = await getFuncionarios
         arr.splice(paramIndex, 1);
         localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
         setTimeout(() => location.reload())
-    }
 }
-
 
 // deletar um registro em uma coleção
 const deleteUnique = async (paramUser, paramIndex, paramObj) => {
-    const res = confirm('Tem certeza do que está Fazendo?')
-    if (res === true) {
         if (getFuncionarios[paramUser].hasOwnProperty(paramObj)) {
             const arr = await getFuncionarios[paramUser][paramObj]
             arr.splice(paramIndex, 1);
             localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
             setTimeout(() => location.reload(), 500)
         }
-    }
 }
 
 const renderTable = () => {
