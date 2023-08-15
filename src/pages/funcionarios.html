@@ -44,6 +44,21 @@
             </table>
         </div>
     </div>
+    <div class="modal none">
+        <span class="exit" onclick="modalconfirm()">X</span>
+        <p style="padding: 1em; line-height: 25px;">Tem certeza que deseja apagar o 
+            <span class="bold">funcionario: </span>
+            <span id="nome"></span> <br>
+            <span class="bold">função: </span>
+            <span id="funcao"></span>
+            da base de dados?
+         </p>
+         <div style="margin-left: 1em;">
+            <button id="ok" class="btn">Ok</button>
+            <button id="cancel" class="btn">Cancelar</button>
+         </div>
+    </div>
+    <div id="background" class="none"></div>
 </body>
 
 </html>

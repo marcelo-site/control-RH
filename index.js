@@ -18,7 +18,6 @@ const createWindow = async () => {
     mainWindow.webContents.openDevTools()
     createNewFile()
     ipcMain.on('export-backup', (e, data) => {
-        console.log(data)
         file.content = data
         saveFileAs()
     })
@@ -31,7 +30,7 @@ const createNewFile = () => {
         file.path = app.getPath('documents') + '/backup-RH.txt'
         return file
 }
-console.log(file)
+
 // salvar backup no disco
 const writeFile = (filePath) => {
     try {
@@ -94,12 +93,6 @@ const templateMenu = [
                 click() {
                     openBackup()
                 }
-            },
-            {
-                label: "Exportar",
-                click() {
-                    saveFileAs()
-                }
             }, {
                 type: 'separator'
             }, {
@@ -116,11 +109,13 @@ const templateMenu = [
                 label: "Site",
                 click() {
                     shell.openExternal('https://marcelo-site.github.io/landing-page/')
-                },
+                }
+            }, {
                 label: "Facebook",
                 click() {
                     shell.openExternal('https://www.facebook.com/profile.php?id=100015225941991')
-                },
+                }
+            }, {
                 label: "Instagram",
                 click() {
                     shell.openExternal('https://www.instagram.com/marcelosouza5224/')

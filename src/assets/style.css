@@ -28,6 +28,7 @@ header nav ul li a {
 }
 
 body {
+    min-height: 94vh;
     margin: 1em 0;
 }
 
@@ -47,7 +48,7 @@ td {
 table,
 #table {
     min-width: 600px;
-    max-width: 800px;
+    max-width: 900px;
 }
 
 table a,
@@ -59,21 +60,17 @@ table button {
     border: 1px solid;
 }
 
-/* table a:hover,
+table a:hover,
 table button:hover {
     background-color: white;
     color: black;
-} */
+}
 
 #table {
     margin: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-table tbody tr:hover {
-    background-color: #cacad4;
 }
 
 caption {
@@ -203,6 +200,7 @@ form h3 {
     padding: 0 0 1.5em 1em;
     overflow: hidden;
     max-height: 90%;
+    padding: .5em .8em;
 }
 
 .modal button {

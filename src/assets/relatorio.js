@@ -6,7 +6,6 @@ const renderRelatorio = async () => {
     getRelatorio.forEach(func => {
         const div = document.createElement('div')
         div.classList.add('content')
-        // div.setAttribute('style', 'width: 800px;')
         const nameFunc = document.createElement('div')
         const name = document.createElement('p')
         name.innerHTML = `<span class="bold">Função: </span>${func.name}` 
@@ -16,7 +15,6 @@ const renderRelatorio = async () => {
         nameFunc.append(funcao)
         div.append(nameFunc)
         const faltas = document.createElement('div')
-        // faltas.style.borderTop = '1px solid'
         const qtyFaltas = document.createElement('p')
         qtyFaltas.innerHTML = `<span class="bold">Faltas: </span>${func.faltas.length} registro(s)`
         faltas.append(qtyFaltas)

@@ -28,9 +28,9 @@ const setNameFunc = (param) => {
     const div = document.createElement('div')
     div.classList.add('info')
     const name = document.createElement('p')
-    name.innerHTML = '<span class="bold">Nome: <span>' + param.name + "</span></span>"
+    name.innerHTML = '<span class="bold">Nome: </span>' + param.name
     const funcao = document.createElement('p')
-    funcao.innerHTML = '<span class="bold">Função: <span>' + param.funcao + "</span></span>"
+    funcao.innerHTML = '<span class="bold">Função: </span>' + param.funcao
     div.append(name)
     div.append(funcao)
     return div
@@ -194,7 +194,7 @@ const renderFaltasOrHorasextras = async (paramUser, paramObj) => {
             const divContext = document.createElement('div')
             divContext.append(p)
             const divButons = document.createElement('div')
-            divButons.style = 'display: flex; gap: 400px;'
+            divButons.style = 'display: flex; gap: 100px;'
             const buttonEdit = document.createElement('button')
             buttonEdit.innerHTML = 'Editar'
             buttonEdit.classList.add('btn')
@@ -218,7 +218,7 @@ const renderFaltasOrHorasextras = async (paramUser, paramObj) => {
             const divContext = document.createElement('div')
             divContext.append(p)
             const divButons = document.createElement('div')
-            divButons.style = 'display: flex; gap: 300px;'
+            divButons.style = 'display: flex; gap: 100px;'
             const buttonEdit = document.createElement('button')
             buttonEdit.innerHTML = 'Editar'
             buttonEdit.classList.add('btn')
@@ -257,11 +257,6 @@ const formHorasExtras = (paramUser, param) => {
     if (paramUser !== undefined) {
         inputHidden.value = paramUser
     }
-    // if (param !== undefined) {
-    //     date.value = param.date
-    //     init.value = param.init
-    //     end.value = param.end
-    // }
     form.append(h3)
     form.append(inputHidden)
     form.append(input(date))
@@ -555,7 +550,7 @@ const renderTable = () => {
         const tdFunc = document.createElement('td')
         const tdFaltas = document.createElement('td')
         const tdAddFaltas = document.createElement('td')
-        const buttonAddFaltas = document.createElement('a')
+        const buttonAddFaltas = document.createElement('button')
         const tdHorasExtras = document.createElement('td')
         const buttonHorasExtras = document.createElement('button')
         const tdHorasExtras2 = document.createElement('td')
@@ -565,12 +560,9 @@ const renderTable = () => {
 
         tdNome.append(func.name + " ")
         tdButtonName.append(buttonNome)
-        // tdNome.append(buttonNome)
 
-        buttonAddFaltas.id = index
         buttonAddFaltas.innerText = 'Add'
         buttonAddFaltas.onclick = () => renderRegisterFaltas(index)
-        buttonAddFaltas.style.padding = '0 2px'
         tdAddFaltas.append(buttonAddFaltas)
         const tr = document.createElement('tr')
 
@@ -585,17 +577,17 @@ const renderTable = () => {
             button.innerHTML = func.faltas.length
             tdFaltas.append(button)
         } else {
-            tdFaltas.append('0')
+            tdFaltas.append(' 0')
         }
         if (func.hasOwnProperty('horas_extras') && func.horas_extras.length !== 0) {
             const value = func.horas_extras.length
-            buttonHorasExtras.innerHTML = `${value} registro(s)`
+            buttonHorasExtras.innerHTML = `${value} `
             buttonHorasExtras.onclick = (e) => renderFaltasOrHorasextras(index, 'horas_extras')
             tdHorasExtras.append(buttonHorasExtras)
         } else {
-            tdHorasExtras.append('0 registro')
+            tdHorasExtras.append(' 0')
         }
-        buttonHorasExtras2.innerHTML = 'Registrar'
+        buttonHorasExtras2.innerHTML = 'Add'
         buttonHorasExtras2.onclick = () => renderRegisterHorasExtras(index)
         tdHorasExtras2.append(buttonHorasExtras2)
 
