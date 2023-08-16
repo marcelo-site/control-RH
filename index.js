@@ -15,7 +15,7 @@ const createWindow = async () => {
     })
 
     await mainWindow.loadFile('src/pages/index.html')
-    mainWindow.webContents.openDevTools()
+    
     createNewFile()
     ipcMain.on('export-backup', (e, data) => {
         file.content = data

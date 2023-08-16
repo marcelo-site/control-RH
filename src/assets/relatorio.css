@@ -47,11 +47,7 @@ h1 {
 }
 
 .content div:nth-child(1) {
-    background-color: #34383973;
-    display: grid;
-    justify-content: stretch;
-    gap: 1em;
-    grid-template-columns: 170px 1fr;
+    background-color: #83808073;
 }
 
 .content div:nth-child(1) p {
@@ -70,6 +66,7 @@ h1 {
 .content p {
     display: grid;
     grid-template-columns: 55px 16.5em 39px 43px 25px 45px 110px 1fr;
+    padding: 2px;
 }
 
 .content p.desconto {
@@ -91,6 +88,6 @@ h1 {
 }
 
 .isactive:hover {
-    background-color: #cacad4;
+    background-color: #e2e2e2;
 }
 
