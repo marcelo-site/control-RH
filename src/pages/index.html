@@ -66,6 +66,16 @@
             </form>
             <button class="btn" onclick="controlModalEmpty()">Fechar</button>
         </div>
+
+        <div id="modal-confirm-empty" class="modal none">
+            <span class="exit" onclick="cancelEmpty()">X</span>
+            <p style="padding: 1em; line-height: 25px;">Tem certeza que deseja apagar os dados de controle selecionado da base de dados?
+             </p>
+             <div style="margin-left: 1em;">
+                <button id="ok" class="btn">Ok</button>
+                <button id="cancel" class="btn">Cancelar</button>
+             </div>
+        </div>
     </main>
     <div id="background" class="none"></div>
 </body>

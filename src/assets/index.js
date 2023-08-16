@@ -465,7 +465,7 @@ const renderAddDescontos = async (param, paramTitle) => {
         title: paramTitle,
         name: {
             name: 'desconto',
-            text: 'Decriçao',
+            text: 'Descriçao',
         }, funcao: {
             name: 'value',
             text: 'Valor'

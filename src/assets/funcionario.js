@@ -20,7 +20,6 @@ form.addEventListener('submit', (e) => {
 })
 
 const deleteFunc = (paramIndex) => {
-console.log('oi')
     if (getFuncionarios.length > 1) {
         const arr = getFuncionarios
         arr.splice(paramIndex, 1);
@@ -46,7 +45,6 @@ const modalconfirm = (paramIndex) => {
     document.querySelector('#cancel').onclick = modalconfirm
     document.querySelector('#background').classList.toggle('none')
     document.querySelector('.modal').classList.toggle('none')
-
 }
 
 const funcsAll = () => {
