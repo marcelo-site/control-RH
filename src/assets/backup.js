@@ -7,9 +7,3 @@ ipcRenderer.on('save-backup', (e, data) => {
         setTimeout(() => location.reload(), 500)
     }
 })
-
-function exportBackup() {
-   return ipcRenderer.send('export-backup', localStorage.getItem('funcionario'))
-}
-
-document.addEventListener('load', exportBackup)

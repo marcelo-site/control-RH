@@ -15,11 +15,11 @@
     <header>
         <nav>
             <ul>
-                <button onclick="exportBackup()" style=" position: absolute; left: 0; top: 5px;
-                padding: 2px;">Fazer backup</button>
+                <!-- <button onclick="exportBackup()" style=" position: absolute; left: 0; top: 5px;
+                padding: 2px;">Fazer backup</button> -->
                 <li><a href="./funcionarios.html" class="btn">Funcionários</a></li>
                 <li><a href="./relatorio.html" class="btn">Relatório</a></li>
-                <li><a onclick="controlModalEmpty()" class="btn">Zerar controle</a></li>
+                <li><a onclick="controlModalEmpty()" class="btn">Novo ciclo</a></li>
             </ul>
         </nav>
     </header>
@@ -45,9 +45,9 @@
 
         <div class="modal none" id="empty_data">
             <span class="exit" onclick="controlModalEmpty()">X</span>
-            <form class="container-form">
-                <h3>Zerar Controle</h3>
-                <p style="width:75%;font-size: .8em;margin: -1.2em 0 1em;">escolha um ou mais campo a ser totalmante limpo.</p>
+            <form style="margin: 1em auto;">
+                <h3>Iniciar novo ciclo</h3>
+                <p style="width:90%;font-size: .8em;margin: -1.2em 0 1em;">escolha um ou mais campo a ser totalmante limpo.</p>
                 <div>
                     <div class="form-empty">
                         <label for="empty_faltas">Zerar Faltas:</label>
@@ -61,7 +61,7 @@
                         <label for="empty_descontos">Zerar descontos:</label>
                         <input type="checkbox" name="empty_descontos" id="empty_descontos">
                     </div>
-                    <input type="submit" value="Zerar" class="btn">
+                    <input type="submit" value="Novo ciclo" class="btn">
                 </div>
             </form>
             <button class="btn" onclick="controlModalEmpty()">Fechar</button>
@@ -69,7 +69,7 @@
 
         <div id="modal-confirm-empty" class="modal none">
             <span class="exit" onclick="cancelEmpty()">X</span>
-            <p style="padding: 1em; line-height: 25px;">Tem certeza que deseja apagar os dados de controle selecionado da base de dados?
+            <p style="padding: 1em; line-height: 25px;">Tem certeza que desja iniciar um novo ciclo, sem os dados do(s) campo(s) que selecionou?
              </p>
              <div style="margin-left: 1em;">
                 <button id="ok" class="btn">Ok</button>

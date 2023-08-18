@@ -1,0 +1,2 @@
+para trocar icon em windows size 256 X 256 icon.ico || icon.png deve 
+ser colacado no diretório build

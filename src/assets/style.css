@@ -54,7 +54,7 @@ table,
 table a,
 table button {
     cursor: pointer;
-    padding: 2px 3px;
+    padding: 2px 5px;
     background-color: black;
     color: white;
     border: 1px solid;
@@ -244,8 +244,13 @@ form h3 {
     display: inline-block;
 }
 
-.grid_value:nth-child(1) {
-    width: 70%;
+.grid_value form #Valor {
+    width: 100px;
+}
+
+.grid_value p {
+    font-size: .8em;
+    margin-top: -10px;
 }
 
 .loop_info {

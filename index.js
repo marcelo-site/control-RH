@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, dialog, ipcMain, shell } = require("electron")
+const { app, BrowserWindow, Menu, dialog, ipcMain, shell, webContents } = require("electron")
 const fs = require("fs")
 const path = require("path")
 
@@ -15,20 +15,21 @@ const createWindow = async () => {
     })
 
     await mainWindow.loadFile('src/pages/index.html')
-    
+    // mainWindow.webContents.openDevTools()
+
     createNewFile()
-    ipcMain.on('export-backup', (e, data) => {
-        file.content = data
-        saveFileAs()
-    })
 }
 
 const file = {}
 // //criar novo arquivo
 const createNewFile = () => {
-        file.name = 'backup-RH.txt',
-        file.path = app.getPath('documents') + '/backup-RH.txt'
-        return file
+    const date = new Date()
+    const arquive = `/backup-RH-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`
+        + `-${date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1}`
+        + `-${date.getFullYear()}.txt`
+    file.name = arquive,
+        file.path = app.getPath('documents') + '/b' + arquive
+    return file
 }
 
 // salvar backup no disco
@@ -47,13 +48,14 @@ const writeFile = (filePath) => {
 }
 
 const saveFileAs = async () => {
-    createNewFile()
     let dialogFile = await dialog.showSaveDialog({
         defaultPath: file.path
     })
     if (dialogFile.canceled) {
         return false
     }
+    const content = await mainWindow.webContents.executeJavaScript('localStorage.getItem("funcionario");', true)
+    file.content = content
     // salvar
     writeFile(dialogFile.filePath)
 }
@@ -69,9 +71,7 @@ const readFile = (filePath) => {
 
 // importar backup
 const openBackup = async () => {
-    let dialogFile = await dialog.showOpenDialog({
-        defaultPath: file.path
-    })
+    let dialogFile = await dialog.showOpenDialog()
     if (dialogFile.canceled) {
         return false
     }
@@ -86,31 +86,27 @@ const openBackup = async () => {
 //template menu
 const templateMenu = [
     {
-        label: "Backup",
+        label: "Fechar app",
+        role: process.platform === "darwin" ? "close" : "quit"
+    }, {
+        label: "Backups",
         submenu: [
             {
-                label: "Importar",
+                label: "Fazer backup",
+                click() {
+                    saveFileAs()
+                }
+            }, {
+                label: "Trazer backup",
                 click() {
                     openBackup()
                 }
-            }, {
-                type: 'separator'
-            }, {
-                label: "Fechar App",
-                accelerator: 'CmdOrCtrl+Q',
-                role: process.platform === "darwin" ? "close" : "quit"
             }
         ]
-    },
-    {
+    }, {
         label: 'Ajuda',
         submenu: [
             {
-                label: "Site",
-                click() {
-                    shell.openExternal('https://marcelo-site.github.io/landing-page/')
-                }
-            }, {
                 label: "Facebook",
                 click() {
                     shell.openExternal('https://www.facebook.com/profile.php?id=100015225941991')
@@ -124,14 +120,25 @@ const templateMenu = [
         ]
     }, {
         label: 'Autor',
-        submenu: [{
-            label: "Marcelo",
-            click() {
-                shell.openExternal('https://www.facebook.com/profile.php?id=100015225941991')
+        submenu: [
+            {
+                label: "Site",
+                click() {
+                    shell.openExternal('https://marcelo-site.github.io/landing-page/')
+                }
+            }, {
+                label: "Marcelo facebook",
+                click() {
+                    shell.openExternal('https://www.facebook.com/profile.php?id=100015225941991')
+                }
+            }, {
+                label: "Marcelo Instagram",
+                click() {
+                    shell.openExternal('https://www.instagram.com/marcelosouza5224/')
+                }
             }
-        }]
-
-    }
+        ]
+    },
 ]
 
 const menu = Menu.buildFromTemplate(templateMenu)

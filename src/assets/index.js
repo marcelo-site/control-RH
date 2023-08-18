@@ -395,13 +395,17 @@ const renderEditFaltas = async (paramUser, paramIndex) => {
 const formDescontos = (param) => {
     const div = document.createElement('div')
     div.classList.add('grid_value')
-    // const form = document.createElement('form')
+    const form = document.createElement('form')
     const h3 = document.createElement('h3')
     h3.innerHTML = param.title
     const inputHidden = document.createElement('input')
     inputHidden.type = 'hidden'
-    inputHidden.name = 'id'
+    inputHidden.name = 'index'
     inputHidden.value = param.hidden
+    const inputUSer = document.createElement('input')
+    inputUSer.type = 'hidden'
+    inputUSer.name = 'iduser'
+    inputUSer.value = param.user
 
     const description = {
         text: param.description.text,
@@ -412,13 +416,24 @@ const formDescontos = (param) => {
         name: param.value.name
     }
     if (param?.description?.value && param?.value?.value) {
-        description.value = param.value.value
+        description.value = param.description.value
         value.value = param.value.value
     }
     form.append(h3)
     form.append(inputHidden)
+    form.append(inputUSer)
     form.append(input(description))
-    form.append(input(value))
+    const inputValue = input(value)
+    // controlar para so numero, vírgula e ponto
+    inputValue.querySelector('#Valor').addEventListener('input', function () {
+        this.value = this.value
+            .replace(/[^0-9.|,]/g, '')
+            .replace(/(\*?)\*/g, '$1');
+    })
+    form.append(inputValue)
+    const p = document.createElement('p')
+    p.innerHTML = 'Separe a casa das milhares com ponto e centavos com vírgula.'
+    form.append(p)
     form.append(submit(param?.submit))
     div.append(form)
     return div
@@ -427,61 +442,63 @@ const formDescontos = (param) => {
 const renderEditDescontos = (paramUser, paramIndex) => {
     const data = {
         title: 'Editar Descontos',
-        name: {
+        description: {
             name: 'description',
             text: 'Descição',
             value: getFuncionarios[paramUser].descontos[paramIndex].description
-        }, funcao: {
+        }, value: {
             name: 'value',
             text: 'Valor',
             value: getFuncionarios[paramUser].descontos[paramIndex].value
         },
-        hidden: paramUser,
+        hidden: paramIndex,
+        user: paramUser,
         submit: 'Editar'
     }
     controlModal(true)
     setInfoFuncionario(paramUser)
-    const formEdit = form(data)
+    const formEdit = formDescontos(data)
     formEdit.addEventListener('submit', editDescontos)
     modalContent.append(formEdit)
 }
 
 const editDescontos = (e) => {
     e.preventDefault()
-        const index = e.target.id.value
-        const indexDescontos = e.target.id.value
-        const description = e.target.description.value
-        const value = e.target.value.value
-        const desconto = {
-            description, value
-        }
-        getFuncionarios[index].descontos[indexDescontos] = desconto
-        localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
-        setTimeout(() => location.reload(), 500)
+    const index = e.target.iduser.value
+    const indexDescontos = e.target.index.value
+    const description = e.target.description.value
+    const value = e.target.value.value
+    const desconto = {
+        description, value
+    }
+    getFuncionarios[index].descontos[indexDescontos] = desconto
+    localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
+    setTimeout(() => location.reload(), 500)
 }
 
 const renderAddDescontos = async (param, paramTitle) => {
     const data = {
         title: paramTitle,
-        name: {
+        description: {
             name: 'desconto',
             text: 'Descriçao',
-        }, funcao: {
+        }, value: {
             name: 'value',
             text: 'Valor'
         },
-        hidden: param,
+        hidden: '',
+        user: param
     }
     controlModal()
     await setInfoFuncionario(param)
-    const formEdit = form(data)
+    const formEdit = formDescontos(data)
     formEdit.addEventListener('submit', addDescontos)
     modalContent.append(formEdit)
 }
 
 const addDescontos = (e) => {
     e.preventDefault()
-    const index = e.target.id.value
+    const index = e.target.iduser.value
     const description = e.target.desconto.value
     const value = e.target.value.value
     const desconto = {
@@ -505,16 +522,20 @@ const renderDescontosAll = async (paramUser, paramIndex) => {
         p.innerHTML = `<span class="bold">Descrição: </span>${el.description}, <span class="bold">Valor: </span> ${el.value}`
         const divContext = document.createElement('div')
         divContext.append(p)
+        const divButtons = document.createElement('div')
+        divButtons.style = 'display: flex; gap: 100px;'
         const buttonEdit = document.createElement('button')
         buttonEdit.classList.add('btn')
         buttonEdit.innerHTML = 'Editar'
         buttonEdit.onclick = () => renderEditDescontos(paramUser, i)
-        divContext.appendChild(buttonEdit)
+        divButtons.append(buttonEdit)
+
         const buttonDel = document.createElement('button')
         buttonDel.classList.add('btn')
         buttonDel.innerHTML = 'Delete'
         buttonDel.onclick = () => deleteUnique(paramUser, i, 'descontos')
-        divContext.append(buttonDel)
+        divButtons.append(buttonDel)
+        divContext.append(divButtons)
         div.append(divContext)
     })
     div.prepend(h3)
@@ -523,20 +544,20 @@ const renderDescontosAll = async (paramUser, paramIndex) => {
 
 // delete funcionario
 const deleteFunc = async (paramIndex) => {
-        const arr = await getFuncionarios
-        arr.splice(paramIndex, 1);
-        localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
-        setTimeout(() => location.reload())
+    const arr = await getFuncionarios
+    arr.splice(paramIndex, 1);
+    localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
+    setTimeout(() => location.reload())
 }
 
 // deletar um registro em uma coleção
 const deleteUnique = async (paramUser, paramIndex, paramObj) => {
-        if (getFuncionarios[paramUser].hasOwnProperty(paramObj)) {
-            const arr = await getFuncionarios[paramUser][paramObj]
-            arr.splice(paramIndex, 1);
-            localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
-            setTimeout(() => location.reload(), 500)
-        }
+    if (getFuncionarios[paramUser].hasOwnProperty(paramObj)) {
+        const arr = await getFuncionarios[paramUser][paramObj]
+        arr.splice(paramIndex, 1);
+        localStorage.setItem('funcionario', JSON.stringify(getFuncionarios))
+        setTimeout(() => location.reload(), 500)
+    }
 }
 
 const renderTable = () => {
@@ -592,11 +613,19 @@ const renderTable = () => {
         tdHorasExtras2.append(buttonHorasExtras2)
 
         if (func?.descontos && func.descontos.length !== 0) {
-            const value = Array.from(func.descontos)
-                .reduce((acc, cur) => acc + parseFloat(cur.value), 0)
-            tdDescontos.append(`R$ ${parseFloat(value).toFixed(2)} `)
+          const values = []
+            func.descontos.forEach(desconto => {
+                values.push(desconto.value
+                    .replace('.', '').replace(',', '.')
+                )})
+            const value = Array.from(values)
+                .reduce((acc, cur) => acc + parseFloat(cur), 0)
+            const BRL = value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+            tdDescontos.style = 'display: flex;justify-content: space-between; border: none;'
+            tdDescontos.append(BRL)
 
             const button = document.createElement('button')
+            button.style = 'margin-left: 5px'
             button.onclick = () => renderDescontosAll(index, 'descontos')
             button.id = index
             button.innerHTML += 'Detalhes'
