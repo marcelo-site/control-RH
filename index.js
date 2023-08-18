@@ -28,7 +28,7 @@ const createNewFile = () => {
         + `-${date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1}`
         + `-${date.getFullYear()}.txt`
     file.name = arquive,
-        file.path = app.getPath('documents') + '/b' + arquive
+        file.path = app.getPath('documents') + arquive
     return file
 }
 
