@@ -1,5 +1,6 @@
 const dataRelatrio = localStorage.getItem('funcionario')
 const contentRealtorio = document.querySelector('#relatorio')
+const pdf = document.querySelector('#pdf')
 
 const renderRelatorio = async () => {
     const getRelatorio = await JSON.parse(dataRelatrio)
@@ -8,7 +9,7 @@ const renderRelatorio = async () => {
         div.classList.add('content')
         const nameFunc = document.createElement('div')
         const name = document.createElement('p')
-        name.innerHTML = `<span class="bold">Função: </span>${func.name}` 
+        name.innerHTML = `<span class="bold">Nome: </span>${func.name}` 
         nameFunc.append(name)
         const funcao = document.createElement('p')
         funcao.innerHTML = `<span class="bold">Função: </span>${func.func}` 
@@ -44,19 +45,25 @@ const renderRelatorio = async () => {
         const descontos = document.createElement('div')
         const totDescontos = document.createElement('p')
         const valueDescontos = func.descontos.reduce((acc, cur) => acc + parseFloat(cur.value), 0)
-        totDescontos.innerHTML = `<span class="bold">Descontos: </span>R$ ${parseFloat(valueDescontos).toFixed(2)}`
+        const descontosBRL = valueDescontos.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
+        totDescontos.innerHTML = `<span class="bold">Descontos: </span>${descontosBRL}`
         descontos.append(totDescontos)
         func.descontos.forEach(desc => {
+            const value = parseFloat(desc.value.replace('.', '').replace(',', '.'))
+            const valueBRL = value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
             const p = document.createElement('p')
             p.classList.add('isactive')
             p.classList.add('desconto')
             p.innerHTML = `<span class="bold">Descrição:</span> ${desc.description}` +
-                `<span class="bold">Valor:</span> ${desc.value}`
+                `<span class="bold">Valor:</span> ${valueBRL}`
             descontos.append(p)
         })
         div.append(descontos)
+        div.style = 'border-bottom: none;'
         contentRealtorio.append(div)
     });
 }
+
+pdf.addEventListener('click', () => window.print())
 
 window.addEventListener('load', renderRelatorio)

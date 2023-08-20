@@ -198,10 +198,12 @@ const renderFaltasOrHorasextras = async (paramUser, paramObj) => {
             const buttonEdit = document.createElement('button')
             buttonEdit.innerHTML = 'Editar'
             buttonEdit.classList.add('btn')
+            buttonEdit.classList.add('edit')
             buttonEdit.onclick = () => renderEditFaltas(paramUser, i)
             divButons.appendChild(buttonEdit)
             const buttonDel = document.createElement('button')
             buttonDel.classList.add('btn')
+            buttonDel.classList.add('del')
             buttonDel.innerHTML = 'Delete'
             buttonDel.onclick = () => deleteUnique(paramUser, i, paramObj)
             divButons.append(buttonDel)
@@ -226,6 +228,7 @@ const renderFaltasOrHorasextras = async (paramUser, paramObj) => {
             buttonEdit.onclick = () => renderEditHorasExtras(paramUser, i)
             const buttonDel = document.createElement('button')
             buttonDel.classList.add('btn')
+            buttonDel.classList.add('del')
             buttonDel.innerHTML = 'Delete'
             buttonDel.onclick = () => deleteUnique(paramUser, i, paramObj)
             divButons.append(buttonDel)
@@ -518,20 +521,25 @@ const renderDescontosAll = async (paramUser, paramIndex) => {
     const h3 = document.createElement('h3')
     h3.innerHTML = paramIndex
     data.forEach((el, i) => {
+        const value = parseFloat(el.value.replace('.', '').replace(',', '.'))
+        // const valueDesconto = parseFloat(value)
+        const descontoBRL = value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
         const p = document.createElement('p')
-        p.innerHTML = `<span class="bold">Descrição: </span>${el.description}, <span class="bold">Valor: </span> ${el.value}`
+        p.innerHTML = `<span class="bold">Descrição: </span>${el.description}, <span class="bold">Valor: </span> ${descontoBRL}`
         const divContext = document.createElement('div')
         divContext.append(p)
         const divButtons = document.createElement('div')
         divButtons.style = 'display: flex; gap: 100px;'
         const buttonEdit = document.createElement('button')
         buttonEdit.classList.add('btn')
+        buttonEdit.classList.add('edit')
         buttonEdit.innerHTML = 'Editar'
         buttonEdit.onclick = () => renderEditDescontos(paramUser, i)
         divButtons.append(buttonEdit)
 
         const buttonDel = document.createElement('button')
         buttonDel.classList.add('btn')
+        buttonDel.classList.add('del')
         buttonDel.innerHTML = 'Delete'
         buttonDel.onclick = () => deleteUnique(paramUser, i, 'descontos')
         divButtons.append(buttonDel)
@@ -621,7 +629,7 @@ const renderTable = () => {
             const value = Array.from(values)
                 .reduce((acc, cur) => acc + parseFloat(cur), 0)
             const BRL = value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-            tdDescontos.style = 'display: flex;justify-content: space-between; border: none;'
+            tdDescontos.classList.add('desconto')
             tdDescontos.append(BRL)
 
             const button = document.createElement('button')
@@ -631,7 +639,7 @@ const renderTable = () => {
             button.innerHTML += 'Detalhes'
             tdDescontos.append(button)
         } else {
-            tdDescontos.append('R$ 00.00')
+            tdDescontos.append('R$ 00,00')
 
         }
         const buttonAddDescontos2 = document.createElement('button')

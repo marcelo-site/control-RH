@@ -4,6 +4,10 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+:root {
+    --primary-color: #1e1e99;
+}
 body {
     margin: 1em auto;
 }
@@ -15,9 +19,7 @@ a {
     text-align: center;
     margin: 1em auto;
 }
-:root {
-    --primary-color: #1e1e99;
-}
+
 h1 {
     color: var(--primary-color);
     text-align: center;
@@ -41,13 +43,13 @@ h1 {
     margin: 0 auto;
 }
 .content {
-    box-shadow: 1px -2px 8px #00000030;
     border: 1px solid;
     margin-bottom: 1em;
 }
 
 .content div:nth-child(1) {
     background-color: #83808073;
+    /* background-color: rgb(233 224 224); */
 }
 
 .content div:nth-child(1) p {
@@ -79,7 +81,7 @@ h1 {
     margin: -5px;
     margin-bottom: 5px;
     padding: 5px;
-    background-color: rgb(233 224 224);
+    background-color: rgb(233 224 224 );
     border-bottom: 1px solid;
 }
 

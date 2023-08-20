@@ -28,10 +28,12 @@
             <table>
                 <caption>Controle do Pessoal (RH)</caption>
                 <thead>
-                    <td colspan="3">Nome e Função</td>
-                    <td colspan="2">Faltas</td>
-                    <td colspan="2">Horas extras</td>
-                    <td colspan="2">Descontos</td>
+                    <tr>
+                        <th colspan="3">Nome e Função</th>
+                        <th colspan="2">Faltas</th>
+                        <th colspan="2">Horas extras</th>
+                        <th colspan="2">Descontos</th>
+                    </tr>
                 </thead>
             </table>
         </div>
@@ -47,7 +49,8 @@
             <span class="exit" onclick="controlModalEmpty()">X</span>
             <form style="margin: 1em auto;">
                 <h3>Iniciar novo ciclo</h3>
-                <p style="width:90%;font-size: .8em;margin: -1.2em 0 1em;">escolha um ou mais campo a ser totalmante limpo.</p>
+                <p style="width:90%;font-size: .8em;margin: -1.2em 0 1em;">escolha um ou mais campo a ser totalmante
+                    limpo.</p>
                 <div>
                     <div class="form-empty">
                         <label for="empty_faltas">Zerar Faltas:</label>
@@ -69,12 +72,13 @@
 
         <div id="modal-confirm-empty" class="modal none">
             <span class="exit" onclick="cancelEmpty()">X</span>
-            <p style="padding: 1em; line-height: 25px;">Tem certeza que desja iniciar um novo ciclo, sem os dados do(s) campo(s) que selecionou?
-             </p>
-             <div style="margin-left: 1em;">
+            <p style="padding: 1em; line-height: 25px;">Tem certeza que desja iniciar um novo ciclo, sem os dados do(s)
+                campo(s) que selecionou?
+            </p>
+            <div style="margin-left: 1em;">
                 <button id="ok" class="btn">Ok</button>
                 <button id="cancel" class="btn">Cancelar</button>
-             </div>
+            </div>
         </div>
     </main>
     <div id="background" class="none"></div>

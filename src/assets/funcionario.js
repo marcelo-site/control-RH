@@ -64,6 +64,9 @@ const funcsAll = () => {
         tr.append(tdFunc)
         const tdDel = document.createElement('td')
         const button = document.createElement('button')
+        button.classList.add('btn')
+        button.classList.add('del')
+        button.style= 'font-size: .8em'
         button.innerHTML = 'Delete'
         button.onclick = () => modalconfirm(i)
         tdDel.append(button)

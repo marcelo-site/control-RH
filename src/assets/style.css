@@ -7,6 +7,7 @@
 
 :root {
     --primary-color: #1e1e99;
+    --secondary-color: #161616;
 }
 a {
     color: var(--primary-color);
@@ -37,12 +38,20 @@ thead {
     font-weight: bold;
 }
 
-table,
-tr,
-td {
-    border: 1px solid;
+table {
     border-collapse: collapse;
+}
+tr,
+th,
+td {
+    border: 1px solid #666;
     padding: 3px 10px;
+}
+
+td.desconto {
+    display: flex;
+    justify-content: space-between;
+    border: none;
 }
 
 table,
@@ -55,15 +64,16 @@ table a,
 table button {
     cursor: pointer;
     padding: 2px 5px;
-    background-color: black;
+    background-color: var(--secondary-color);
     color: white;
     border: 1px solid;
+    transition: .3s;
 }
 
 table a:hover,
 table button:hover {
     background-color: white;
-    color: black;
+    color: var(--secondary-color);
 }
 
 #table {
@@ -81,17 +91,17 @@ caption {
 }
 
 thead {
-    box-shadow: 1px -2px 8px #00000030;
+    /* box-shadow: 1px -2px 8px #00000030; */
 }
 tbody {
-    box-shadow: 1px 3px 8px #00000030;
+    /* box-shadow: 1px 3px 8px #00000030; */
 }
 thead tr {
     background-color: rgb(233 224 224);
 }
 
 table tr:nth-child(even) {
-    background-color: rgb(233 224 224);
+    background-color: rgb(233 224 224 );
 }
 
 form {
@@ -172,15 +182,26 @@ form h3 {
 .btn {
     font-size: 1.2em;
     background-color: white;
-    color: black;
+    color: var(--secondary-color);
     font-weight: bold;
     padding: 0.3em 0.6em;
     cursor: pointer;
     border: 1px solid;
+    transition: .5s;
+}
+
+.btn.del {
+    background-color: red;
+    color: white;
+}
+
+.btn.del:hover {
+    background-color: white;
+    color: red;
 }
 
 .btn:hover {
-    background-color: black;
+    background-color:var(--secondary-color);
     color: white;
 }
 
@@ -278,9 +299,10 @@ h3 {
     margin-left: 0;
 }
 
-.loop_info div {
-    border-bottom: 1px solid;
+.loop_info > div {
+    border-bottom: 1px solid #7a7a7a;
     width: 100%;
+    margin-bottom: 5px;
 }
 
 .form-empty {
