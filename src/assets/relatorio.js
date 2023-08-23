@@ -1,6 +1,10 @@
 const dataRelatrio = localStorage.getItem('funcionario')
 const contentRealtorio = document.querySelector('#relatorio')
 const pdf = document.querySelector('#pdf')
+const dateDom =document.querySelector('#date')
+
+const date = new Date()
+dateDom.innerHTML = date.toLocaleDateString('pt-br')
 
 const renderRelatorio = async () => {
     const getRelatorio = await JSON.parse(dataRelatrio)
@@ -44,7 +48,8 @@ const renderRelatorio = async () => {
         div.append(hrsExtras)
         const descontos = document.createElement('div')
         const totDescontos = document.createElement('p')
-        const valueDescontos = func.descontos.reduce((acc, cur) => acc + parseFloat(cur.value), 0)
+        const valueDescontos = func.descontos.reduce((acc, cur) => acc + parseFloat(cur.value.replace('.', '').replace(',', '.')), 0)
+        console.log(func.descontos)
         const descontosBRL = valueDescontos.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
         totDescontos.innerHTML = `<span class="bold">Descontos: </span>${descontosBRL}`
         descontos.append(totDescontos)

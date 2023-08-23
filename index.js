@@ -15,18 +15,23 @@ const createWindow = async () => {
     })
 
     await mainWindow.loadFile('src/pages/index.html')
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 
     createNewFile()
+}
+
+const pathDate = (paramName, paramExtension) => {
+    const date = new Date()
+    const arquive = `/${paramName}-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`
+        + `-${date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1}`
+        + `-${date.getFullYear()}.${paramExtension}`
+    return arquive
 }
 
 const file = {}
 // //criar novo arquivo
 const createNewFile = () => {
-    const date = new Date()
-    const arquive = `/backup-RH-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`
-        + `-${date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1}`
-        + `-${date.getFullYear()}.txt`
+    const arquive = pathDate('backup-RH', 'txt')
     file.name = arquive,
         file.path = app.getPath('documents') + arquive
     return file
@@ -45,6 +50,25 @@ const writeFile = (filePath) => {
     } catch (err) {
         console.log(err)
     }
+}
+
+const savePDF = async () => {
+    try {
+        const pathEnd = pathDate('relatorio-RH', 'pdf')
+        let dialogFile = await dialog.showSaveDialog({
+            defaultPath: pathEnd
+        })
+        if (dialogFile.canceled) {
+            return false
+        }
+        const pdf = await mainWindow.webContents.printToPDF({})
+        fs.writeFile(dialogFile.filePath, pdf, (error) => {
+            if (error) throw error
+        })
+    } catch (error) {
+        console.log(error)
+    }
+
 }
 
 const saveFileAs = async () => {
@@ -89,6 +113,12 @@ const templateMenu = [
         label: "Fechar app",
         role: process.platform === "darwin" ? "close" : "quit"
     }, {
+        label: "PDF da Page",
+        click() {
+            savePDF()
+        }
+    }
+    , {
         label: "Backups",
         submenu: [
             {
@@ -97,7 +127,7 @@ const templateMenu = [
                     saveFileAs()
                 }
             }, {
-                label: "Trazer backup",
+                label: "Importar backup",
                 click() {
                     openBackup()
                 }
