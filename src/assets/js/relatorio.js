@@ -59,8 +59,8 @@ const renderRelatorio = async () => {
             const p = document.createElement('p')
             p.classList.add('isactive')
             p.classList.add('desconto')
-            p.innerHTML = `<span class="bold">Descrição:</span> ${desc.description}` +
-                `<span class="bold">Valor:</span> ${valueBRL}`
+            p.innerHTML = `<span class="bold">Valor:</span> ${valueBRL}` +
+                `<span class="bold">Descrição:</span> ${desc.description}`
             descontos.append(p)
         })
         div.append(descontos)
@@ -68,7 +68,5 @@ const renderRelatorio = async () => {
         contentRealtorio.append(div)
     });
 }
-
-pdf.addEventListener('click', () => window.print())
 
 window.addEventListener('load', renderRelatorio)
