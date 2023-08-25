@@ -16,8 +16,7 @@ const createWindow = async () => {
     })
 
     await mainWindow.loadFile('src/pages/index.html')
-    // mainWindow.webContents.openDevTools()
-
+    
     createNewFile()
 }
 
@@ -36,34 +35,26 @@ const createNewFile = () => {
     return file
 }
 
-// salvar backup no disco
-const writeFile = (filePath) => {
-    try {
-        fs.writeFile(filePath, file.content, (error) => {
-            if (error) throw error
-
-            //arquivo salvo
-            file.path = filePath
-            file.name = path.basename(filePath)
-        })
-    } catch (err) {
-        console.log(err)
-    }
-}
-
 const savePDF = async () => {
     try {
-      const location = await mainWindow.webContents.executeJavaScript('window.location.pathname')
-      const path = location.split('/').pop().split('.')[0]
+        const location = await mainWindow.webContents.executeJavaScript('window.location.pathname')
+        const path = location.split('/').pop().split('.')[0]
         const pathEnd = pathDate(path + '-RH', 'pdf')
         let dialogFile = await dialog.showSaveDialog({
+            title: "Salvando PDF",
+            buttonLabel: "Salvar PDF",
             defaultPath: pathEnd
         })
         if (dialogFile.canceled) {
             return false
         }
+        const existsExtension = dialogFile.filePath.split('.')
+        if (existsExtension.length !== 2) {
+            dialogFile.filePath = dialogFile.filePath + '.pdf'
+        }
         const pdf = await mainWindow.webContents.printToPDF({
-            margins: ['100', '10', '10', '10']
+            // margins: ['100', '0', '0', '0'],
+            printBackground: true
         })
         fs.writeFile(dialogFile.filePath, pdf, (error) => {
             if (error) throw error
@@ -73,12 +64,32 @@ const savePDF = async () => {
     }
 }
 
+// salvar backup no disco
+const writeFile = (filePath) => {
+    try {
+        fs.writeFile(filePath, file.content, (error) => {
+            if (error) throw error
+            //arquivo salvo
+            file.path = filePath
+            file.name = path.basename(filePath)
+        })
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 const saveFileAs = async () => {
     let dialogFile = await dialog.showSaveDialog({
-        defaultPath: file.path
+        title: "Fazendo backup",
+        buttonLabel: "Salvar backup",
+        defaultPath: file.path 
     })
     if (dialogFile.canceled) {
         return false
+    }
+    const existsExtension = dialogFile.filePath.split('.')
+    if (existsExtension.length !== 2) {
+        dialogFile.filePath = dialogFile.filePath + '.txt'
     }
     const content = await mainWindow.webContents.executeJavaScript('localStorage.getItem("funcionario");', true)
     file.content = content
@@ -107,8 +118,8 @@ const openBackup = async () => {
                 name: 'All',
                 extensions: ["*"]
             }, {
-                 name: 'Arquivos .txt',
-                 extensions: ['txt']           
+                name: 'Arquivos .txt',
+                extensions: ['txt']
             }
         ]
     })
@@ -123,13 +134,13 @@ const openBackup = async () => {
         buttons: ['ok', 'cancel']
     })
 
-    if(res.response === 0) {
+    if (res.response === 0) {
         // abrir arquivo
-    file.name = path.basename(dialogFile.filePaths[0])
-    file.content = readFile(dialogFile.filePaths[0])
-    file.path = dialogFile.filePaths[0]
-    // salvar no frontend
-    mainWindow.webContents.send('save-backup', file.content)
+        file.name = path.basename(dialogFile.filePaths[0])
+        file.content = readFile(dialogFile.filePaths[0])
+        file.path = dialogFile.filePaths[0]
+        // salvar no frontend
+        mainWindow.webContents.send('env-backup', file.content)
     }
 }
 
@@ -165,16 +176,16 @@ const templateMenu = [
                 label: 'zoom +',
                 accelerator: 'CmdOrCtrl+=',
                 role: 'zoomin'
-            },  {
+            }, {
                 label: 'zoom -',
                 role: 'zoomout'
-            },{
+            }, {
                 label: 'Tamanho padrão',
                 role: 'resetzoom'
             }, {
                 label: 'Alternar tela cheia',
                 role: 'togglefullscreen'
-            },{
+            }, {
                 label: "Fechar app",
                 role: process.platform === "darwin" ? "close" : "quit",
                 accelerator: 'CmdOrCtrl+Shift+X',
@@ -200,7 +211,7 @@ const templateMenu = [
         submenu: [
             {
                 label: "Marcelo-Site",
-                
+
                 click() {
                     shell.openExternal('https://marcelo-site.github.io/landing-page/')
                 }

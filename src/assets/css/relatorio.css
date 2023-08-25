@@ -36,12 +36,12 @@ h1 {
     margin-bottom: 0;
     display: flex;
     justify-content: flex-start;
-    border: 1px solid;
+    border: 1px solid rgba(0, 0, 0, 0.46);
 }
 
 #relatorio {
-    min-width: 90vw;
-    max-width: 800px;
+    min-width: 80vw;
+    max-width: 800px; 
     margin: 0 auto;
 }
 
@@ -51,13 +51,15 @@ h1 {
 }
 
 .content div:nth-child(1) {
-    background-color: rgb(228 224 224)
+    display: flex;
+    gap: 16px;
+    background-color: rgb(30 30 153 / 65%);
+    color: white;
+    padding-left: 0;
 }
 
 .content div:nth-child(1) p {
-    display: flex;
-    gap: 10px;
-    padding-left: 0;
+    display: block;
 }
 
 .bold {
@@ -95,7 +97,11 @@ h1 {
 }
 
 .isactive:hover {
-    background-color: #e2e2e2;
+    background-color: #e2e2e2b7;
+}
+
+#relatorio div {
+    page-break-inside: avoid
 }
 
 @media print {
@@ -107,8 +113,8 @@ h1 {
 @page {
 size: A4;
 margin-top: 10mm;
-margin-bottom: 10mm;
-margin-left: -20mm;
-margin-right: -20mm;
-padding : -20mm;
+margin-bottom: 0mm;
+margin-left: -30mm;
+margin-right: -30mm;
+padding : 0mm;
 }

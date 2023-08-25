@@ -101,11 +101,11 @@ tbody {
 }
 
 thead tr {
-    background-color: rgb(233 224 224);
+    background-color: rgb(233 224 224 / 60%);
 }
 
 table tr:nth-child(even) {
-    background-color: rgb(233 224 224);
+    background-color: rgb(233 224 224 /60%);
 }
 
 form {

@@ -49,7 +49,6 @@ const renderRelatorio = async () => {
         const descontos = document.createElement('div')
         const totDescontos = document.createElement('p')
         const valueDescontos = func.descontos.reduce((acc, cur) => acc + parseFloat(cur.value.replace('.', '').replace(',', '.')), 0)
-        console.log(func.descontos)
         const descontosBRL = valueDescontos.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
         totDescontos.innerHTML = `<span class="bold">Descontos: </span>${descontosBRL}`
         descontos.append(totDescontos)
